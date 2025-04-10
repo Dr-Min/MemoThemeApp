@@ -1,0 +1,106 @@
+{
+  "common": {
+    "appName": "메모 테마 앱",
+    "memos": "메모",
+    "memo": "메모",
+    "themes": "테마",
+    "theme": "테마",
+    "noMemos": "메모가 없습니다.",
+    "noThemes": "테마가 없습니다.",
+    "addNew": "새로 추가",
+    "delete": "삭제",
+    "edit": "편집",
+    "cancel": "취소",
+    "save": "저장",
+    "close": "닫기",
+    "confirm": "확인",
+    "yes": "예",
+    "no": "아니오"
+  },
+  "home": {
+    "title": "메모",
+    "addMemo": "메모 추가",
+    "filterShow": "필터 표시",
+    "filterHide": "필터 숨기기",
+    "chatMode": "채팅 모드",
+    "standardMode": "기본 모드",
+    "themeChat": "테마 채팅",
+    "selectAll": "전체 선택",
+    "addTheme": "테마 추가",
+    "deleteSelected": "선택 삭제",
+    "noMemosMessage": "메모가 없습니다.",
+    "addNewMemoMessage": "새 메모를 추가해보세요!",
+    "noFilteredMemosMessage": "선택한 필터 조건에 해당하는 메모가 없습니다.",
+    "resetThemeFilter": "테마 필터 초기화",
+    "resetDateFilter": "날짜 필터 초기화"
+  },
+  "filter": {
+    "dateGrouping": "날짜 그룹화",
+    "grouping": "그룹화",
+    "dateRangeFilter": "날짜 범위 필터",
+    "useAndCondition": "AND 조건 사용",
+    "useOrCondition": "OR 조건 사용",
+    "clearFilters": "필터 초기화",
+    "day": "일별",
+    "month": "월별",
+    "year": "연도별"
+  },
+  "memoDetail": {
+    "title": "메모 상세",
+    "edit": "메모 편집",
+    "delete": "메모 삭제",
+    "shareMessage": "이 메모를 공유하시겠습니까?",
+    "deleteMessage": "이 메모를 삭제하시겠습니까?",
+    "createdAt": "작성 일시",
+    "updatedAt": "수정 일시"
+  },
+  "themeManagement": {
+    "title": "테마 관리",
+    "addTheme": "테마 추가",
+    "editTheme": "테마 편집",
+    "deleteTheme": "테마 삭제",
+    "deleteConfirm": "이 테마를 삭제하시겠습니까? 연결된 메모에서 이 테마가 제거됩니다.",
+    "emptyThemes": "현재 테마가 없습니다. 새 테마를 추가해보세요!",
+    "visualizeThemes": "테마 시각화"
+  },
+  "themeEdit": {
+    "title": "테마 편집",
+    "nameLabel": "테마 이름",
+    "descriptionLabel": "설명",
+    "colorLabel": "색상",
+    "addKeywords": "키워드 추가",
+    "keywordPlaceholder": "키워드 입력",
+    "parentThemeLabel": "상위 테마"
+  },
+  "themeVisualization": {
+    "title": "테마 시각화",
+    "relationshipTab": "관계도",
+    "statisticsTab": "통계",
+    "noThemeSelected": "테마를 선택하여 자세한 정보를 확인하세요",
+    "selectedTheme": "선택한 테마",
+    "relatedMemos": "관련 메모",
+    "parentThemes": "상위 테마",
+    "childThemes": "하위 테마",
+    "memoCount": "메모 수",
+    "isolatedThemes": "독립 테마"
+  },
+  "themeChatList": {
+    "title": "테마 채팅",
+    "emptyMessage": "테마가 없습니다. 메모를 작성하면 자동으로 테마가 생성됩니다.",
+    "lastMemo": "마지막 메모",
+    "memoCount": "메모 {count}개"
+  },
+  "settings": {
+    "title": "설정",
+    "language": "언어",
+    "languageChange": "언어 변경",
+    "darkMode": "다크 모드",
+    "notifications": "알림",
+    "backup": "백업",
+    "export": "데이터 내보내기",
+    "import": "데이터 가져오기",
+    "about": "앱 정보",
+    "version": "버전",
+    "feedback": "피드백 보내기"
+  }
+} 

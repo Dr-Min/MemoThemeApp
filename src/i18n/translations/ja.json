@@ -1,0 +1,106 @@
+{
+  "common": {
+    "appName": "メモテーマアプリ",
+    "memos": "メモ",
+    "memo": "メモ",
+    "themes": "テーマ",
+    "theme": "テーマ",
+    "noMemos": "メモはありません",
+    "noThemes": "テーマはありません",
+    "addNew": "新規追加",
+    "delete": "削除",
+    "edit": "編集",
+    "cancel": "キャンセル",
+    "save": "保存",
+    "close": "閉じる",
+    "confirm": "確認",
+    "yes": "はい",
+    "no": "いいえ"
+  },
+  "home": {
+    "title": "メモ",
+    "addMemo": "メモを追加",
+    "filterShow": "フィルター表示",
+    "filterHide": "フィルター非表示",
+    "chatMode": "チャットモード",
+    "standardMode": "標準モード",
+    "themeChat": "テーマチャット",
+    "selectAll": "すべて選択",
+    "addTheme": "テーマ追加",
+    "deleteSelected": "選択項目を削除",
+    "noMemosMessage": "メモはありません",
+    "addNewMemoMessage": "新しいメモを追加してみましょう！",
+    "noFilteredMemosMessage": "選択したフィルター条件に一致するメモはありません。",
+    "resetThemeFilter": "テーマフィルターをリセット",
+    "resetDateFilter": "日付フィルターをリセット"
+  },
+  "filter": {
+    "dateGrouping": "日付グループ化",
+    "grouping": "グループ化",
+    "dateRangeFilter": "日付範囲フィルター",
+    "useAndCondition": "AND条件を使用",
+    "useOrCondition": "OR条件を使用",
+    "clearFilters": "フィルターをクリア",
+    "day": "日別",
+    "month": "月別",
+    "year": "年別"
+  },
+  "memoDetail": {
+    "title": "メモ詳細",
+    "edit": "メモを編集",
+    "delete": "メモを削除",
+    "shareMessage": "このメモを共有しますか？",
+    "deleteMessage": "このメモを削除してもよろしいですか？",
+    "createdAt": "作成日時",
+    "updatedAt": "更新日時"
+  },
+  "themeManagement": {
+    "title": "テーマ管理",
+    "addTheme": "テーマを追加",
+    "editTheme": "テーマを編集",
+    "deleteTheme": "テーマを削除",
+    "deleteConfirm": "このテーマを削除してもよろしいですか？関連するメモからこのテーマが削除されます。",
+    "emptyThemes": "テーマがまだありません。新しいテーマを追加してみましょう！",
+    "visualizeThemes": "テーマを視覚化"
+  },
+  "themeEdit": {
+    "title": "テーマ編集",
+    "nameLabel": "テーマ名",
+    "descriptionLabel": "説明",
+    "colorLabel": "色",
+    "addKeywords": "キーワードを追加",
+    "keywordPlaceholder": "キーワードを入力",
+    "parentThemeLabel": "親テーマ"
+  },
+  "themeVisualization": {
+    "title": "テーマ視覚化",
+    "relationshipTab": "関係図",
+    "statisticsTab": "統計",
+    "noThemeSelected": "テーマを選択して詳細情報を表示",
+    "selectedTheme": "選択したテーマ",
+    "relatedMemos": "関連メモ",
+    "parentThemes": "親テーマ",
+    "childThemes": "子テーマ",
+    "memoCount": "メモ数",
+    "isolatedThemes": "独立テーマ"
+  },
+  "themeChatList": {
+    "title": "テーマチャット",
+    "emptyMessage": "テーマがまだありません。メモを書くと自動的にテーマが作成されます。",
+    "lastMemo": "最新のメモ",
+    "memoCount": "メモ{count}件"
+  },
+  "settings": {
+    "title": "設定",
+    "language": "言語",
+    "languageChange": "言語を変更",
+    "darkMode": "ダークモード",
+    "notifications": "通知",
+    "backup": "バックアップ",
+    "export": "データをエクスポート",
+    "import": "データをインポート",
+    "about": "アプリについて",
+    "version": "バージョン",
+    "feedback": "フィードバックを送信"
+  }
+} 

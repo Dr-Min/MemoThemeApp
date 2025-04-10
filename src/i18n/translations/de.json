@@ -1,0 +1,106 @@
+{
+  "common": {
+    "appName": "Notiz-Themen-App",
+    "memos": "Notizen",
+    "memo": "Notiz",
+    "themes": "Themen",
+    "theme": "Thema",
+    "noMemos": "Keine Notizen",
+    "noThemes": "Keine Themen",
+    "addNew": "Neu hinzufügen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "close": "Schließen",
+    "confirm": "Bestätigen",
+    "yes": "Ja",
+    "no": "Nein"
+  },
+  "home": {
+    "title": "Notizen",
+    "addMemo": "Notiz hinzufügen",
+    "filterShow": "Filter anzeigen",
+    "filterHide": "Filter ausblenden",
+    "chatMode": "Chat-Modus",
+    "standardMode": "Standard-Modus",
+    "themeChat": "Themen-Chat",
+    "selectAll": "Alle auswählen",
+    "addTheme": "Thema hinzufügen",
+    "deleteSelected": "Ausgewählte löschen",
+    "noMemosMessage": "Keine Notizen",
+    "addNewMemoMessage": "Versuche, eine neue Notiz hinzuzufügen!",
+    "noFilteredMemosMessage": "Keine Notizen entsprechen den ausgewählten Filterkriterien.",
+    "resetThemeFilter": "Themenfilter zurücksetzen",
+    "resetDateFilter": "Datumsfilter zurücksetzen"
+  },
+  "filter": {
+    "dateGrouping": "Datums-Gruppierung",
+    "grouping": "Gruppierung",
+    "dateRangeFilter": "Datumsbereich-Filter",
+    "useAndCondition": "UND-Bedingung verwenden",
+    "useOrCondition": "ODER-Bedingung verwenden",
+    "clearFilters": "Filter löschen",
+    "day": "Täglich",
+    "month": "Monatlich",
+    "year": "Jährlich"
+  },
+  "memoDetail": {
+    "title": "Notiz-Details",
+    "edit": "Notiz bearbeiten",
+    "delete": "Notiz löschen",
+    "shareMessage": "Möchten Sie diese Notiz teilen?",
+    "deleteMessage": "Sind Sie sicher, dass Sie diese Notiz löschen möchten?",
+    "createdAt": "Erstellt am",
+    "updatedAt": "Aktualisiert am"
+  },
+  "themeManagement": {
+    "title": "Themenverwaltung",
+    "addTheme": "Thema hinzufügen",
+    "editTheme": "Thema bearbeiten",
+    "deleteTheme": "Thema löschen",
+    "deleteConfirm": "Sind Sie sicher, dass Sie dieses Thema löschen möchten? Es wird aus allen zugehörigen Notizen entfernt.",
+    "emptyThemes": "Noch keine Themen. Versuchen Sie, ein neues Thema hinzuzufügen!",
+    "visualizeThemes": "Themen visualisieren"
+  },
+  "themeEdit": {
+    "title": "Thema bearbeiten",
+    "nameLabel": "Themen-Name",
+    "descriptionLabel": "Beschreibung",
+    "colorLabel": "Farbe",
+    "addKeywords": "Schlüsselwörter hinzufügen",
+    "keywordPlaceholder": "Schlüsselwort eingeben",
+    "parentThemeLabel": "Übergeordnetes Thema"
+  },
+  "themeVisualization": {
+    "title": "Themen-Visualisierung",
+    "relationshipTab": "Beziehungen",
+    "statisticsTab": "Statistiken",
+    "noThemeSelected": "Wählen Sie ein Thema, um detaillierte Informationen zu sehen",
+    "selectedTheme": "Ausgewähltes Thema",
+    "relatedMemos": "Zugehörige Notizen",
+    "parentThemes": "Übergeordnete Themen",
+    "childThemes": "Untergeordnete Themen",
+    "memoCount": "Anzahl der Notizen",
+    "isolatedThemes": "Isolierte Themen"
+  },
+  "themeChatList": {
+    "title": "Themen-Chat",
+    "emptyMessage": "Noch keine Themen. Themen werden automatisch erstellt, wenn Sie Notizen schreiben.",
+    "lastMemo": "Letzte Notiz",
+    "memoCount": "{count} Notizen"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "language": "Sprache",
+    "languageChange": "Sprache ändern",
+    "darkMode": "Dunkelmodus",
+    "notifications": "Benachrichtigungen",
+    "backup": "Sicherung",
+    "export": "Daten exportieren",
+    "import": "Daten importieren",
+    "about": "Über",
+    "version": "Version",
+    "feedback": "Feedback senden"
+  }
+} 

@@ -1,0 +1,106 @@
+{
+  "common": {
+    "appName": "备忘录主题应用",
+    "memos": "备忘录",
+    "memo": "备忘录",
+    "themes": "主题",
+    "theme": "主题",
+    "noMemos": "没有备忘录",
+    "noThemes": "没有主题",
+    "addNew": "新增",
+    "delete": "删除",
+    "edit": "编辑",
+    "cancel": "取消",
+    "save": "保存",
+    "close": "关闭",
+    "confirm": "确认",
+    "yes": "是",
+    "no": "否"
+  },
+  "home": {
+    "title": "备忘录",
+    "addMemo": "添加备忘录",
+    "filterShow": "显示筛选",
+    "filterHide": "隐藏筛选",
+    "chatMode": "聊天模式",
+    "standardMode": "标准模式",
+    "themeChat": "主题聊天",
+    "selectAll": "全选",
+    "addTheme": "添加主题",
+    "deleteSelected": "删除所选",
+    "noMemosMessage": "没有备忘录",
+    "addNewMemoMessage": "尝试添加一个新备忘录！",
+    "noFilteredMemosMessage": "没有符合所选筛选条件的备忘录。",
+    "resetThemeFilter": "重置主题筛选",
+    "resetDateFilter": "重置日期筛选"
+  },
+  "filter": {
+    "dateGrouping": "日期分组",
+    "grouping": "分组",
+    "dateRangeFilter": "日期范围筛选",
+    "useAndCondition": "使用与条件",
+    "useOrCondition": "使用或条件",
+    "clearFilters": "清除筛选",
+    "day": "按日",
+    "month": "按月",
+    "year": "按年"
+  },
+  "memoDetail": {
+    "title": "备忘录详情",
+    "edit": "编辑备忘录",
+    "delete": "删除备忘录",
+    "shareMessage": "是否要分享这个备忘录？",
+    "deleteMessage": "确定要删除这个备忘录吗？",
+    "createdAt": "创建时间",
+    "updatedAt": "更新时间"
+  },
+  "themeManagement": {
+    "title": "主题管理",
+    "addTheme": "添加主题",
+    "editTheme": "编辑主题",
+    "deleteTheme": "删除主题",
+    "deleteConfirm": "确定要删除这个主题吗？它将从所有相关备忘录中移除。",
+    "emptyThemes": "暂无主题。尝试添加一个新主题！",
+    "visualizeThemes": "主题可视化"
+  },
+  "themeEdit": {
+    "title": "编辑主题",
+    "nameLabel": "主题名称",
+    "descriptionLabel": "描述",
+    "colorLabel": "颜色",
+    "addKeywords": "添加关键词",
+    "keywordPlaceholder": "输入关键词",
+    "parentThemeLabel": "父主题"
+  },
+  "themeVisualization": {
+    "title": "主题可视化",
+    "relationshipTab": "关系图",
+    "statisticsTab": "统计",
+    "noThemeSelected": "选择一个主题以查看详细信息",
+    "selectedTheme": "已选主题",
+    "relatedMemos": "相关备忘录",
+    "parentThemes": "父主题",
+    "childThemes": "子主题",
+    "memoCount": "备忘录数量",
+    "isolatedThemes": "独立主题"
+  },
+  "themeChatList": {
+    "title": "主题聊天",
+    "emptyMessage": "暂无主题。当您编写备忘录时，系统会自动创建主题。",
+    "lastMemo": "最新备忘录",
+    "memoCount": "{count}条备忘录"
+  },
+  "settings": {
+    "title": "设置",
+    "language": "语言",
+    "languageChange": "更改语言",
+    "darkMode": "深色模式",
+    "notifications": "通知",
+    "backup": "备份",
+    "export": "导出数据",
+    "import": "导入数据",
+    "about": "关于",
+    "version": "版本",
+    "feedback": "发送反馈"
+  }
+} 

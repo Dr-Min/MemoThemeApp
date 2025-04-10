@@ -1,0 +1,106 @@
+{
+  "common": {
+    "appName": "Приложение для Тематических Заметок",
+    "memos": "Заметки",
+    "memo": "Заметка",
+    "themes": "Темы",
+    "theme": "Тема",
+    "noMemos": "Нет заметок",
+    "noThemes": "Нет тем",
+    "addNew": "Добавить новое",
+    "delete": "Удалить",
+    "edit": "Редактировать",
+    "cancel": "Отмена",
+    "save": "Сохранить",
+    "close": "Закрыть",
+    "confirm": "Подтвердить",
+    "yes": "Да",
+    "no": "Нет"
+  },
+  "home": {
+    "title": "Заметки",
+    "addMemo": "Добавить Заметку",
+    "filterShow": "Показать Фильтры",
+    "filterHide": "Скрыть Фильтры",
+    "chatMode": "Режим Чата",
+    "standardMode": "Стандартный Режим",
+    "themeChat": "Тематический Чат",
+    "selectAll": "Выбрать Все",
+    "addTheme": "Добавить Тему",
+    "deleteSelected": "Удалить Выбранное",
+    "noMemosMessage": "Нет заметок",
+    "addNewMemoMessage": "Попробуйте добавить новую заметку!",
+    "noFilteredMemosMessage": "Нет заметок, соответствующих выбранным критериям фильтрации.",
+    "resetThemeFilter": "Сбросить Фильтр Тем",
+    "resetDateFilter": "Сбросить Фильтр Дат"
+  },
+  "filter": {
+    "dateGrouping": "Группировка по Дате",
+    "grouping": "Группировка",
+    "dateRangeFilter": "Фильтр Диапазона Дат",
+    "useAndCondition": "Использовать Условие И",
+    "useOrCondition": "Использовать Условие ИЛИ",
+    "clearFilters": "Очистить Фильтры",
+    "day": "По дням",
+    "month": "По месяцам",
+    "year": "По годам"
+  },
+  "memoDetail": {
+    "title": "Детали Заметки",
+    "edit": "Редактировать Заметку",
+    "delete": "Удалить Заметку",
+    "shareMessage": "Хотите поделиться этой заметкой?",
+    "deleteMessage": "Вы уверены, что хотите удалить эту заметку?",
+    "createdAt": "Создано",
+    "updatedAt": "Обновлено"
+  },
+  "themeManagement": {
+    "title": "Управление Темами",
+    "addTheme": "Добавить Тему",
+    "editTheme": "Редактировать Тему",
+    "deleteTheme": "Удалить Тему",
+    "deleteConfirm": "Вы уверены, что хотите удалить эту тему? Она будет удалена из всех связанных заметок.",
+    "emptyThemes": "Пока нет тем. Попробуйте добавить новую тему!",
+    "visualizeThemes": "Визуализировать Темы"
+  },
+  "themeEdit": {
+    "title": "Редактировать Тему",
+    "nameLabel": "Название Темы",
+    "descriptionLabel": "Описание",
+    "colorLabel": "Цвет",
+    "addKeywords": "Добавить Ключевые Слова",
+    "keywordPlaceholder": "Введите ключевое слово",
+    "parentThemeLabel": "Родительская Тема"
+  },
+  "themeVisualization": {
+    "title": "Визуализация Тем",
+    "relationshipTab": "Связи",
+    "statisticsTab": "Статистика",
+    "noThemeSelected": "Выберите тему, чтобы увидеть подробную информацию",
+    "selectedTheme": "Выбранная Тема",
+    "relatedMemos": "Связанные Заметки",
+    "parentThemes": "Родительские Темы",
+    "childThemes": "Дочерние Темы",
+    "memoCount": "Количество Заметок",
+    "isolatedThemes": "Изолированные Темы"
+  },
+  "themeChatList": {
+    "title": "Тематический Чат",
+    "emptyMessage": "Пока нет тем. Темы создаются автоматически при написании заметок.",
+    "lastMemo": "Последняя Заметка",
+    "memoCount": "{count} Заметок"
+  },
+  "settings": {
+    "title": "Настройки",
+    "language": "Язык",
+    "languageChange": "Изменить Язык",
+    "darkMode": "Темный Режим",
+    "notifications": "Уведомления",
+    "backup": "Резервное Копирование",
+    "export": "Экспорт Данных",
+    "import": "Импорт Данных",
+    "about": "О Приложении",
+    "version": "Версия",
+    "feedback": "Отправить Отзыв"
+  }
+} 

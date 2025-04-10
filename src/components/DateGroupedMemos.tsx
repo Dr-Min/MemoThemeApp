@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, FlatList } from 'react-native';
-import { MemoItem } from './MemoItem';
+import MemoItem from './MemoItem';
 import { DateGroup } from '../services/memo/MemoService';
 import { Memo } from '../models/Memo';
 import { Theme } from '../models/Theme';
@@ -9,17 +9,25 @@ interface DateGroupedMemosProps {
   dateGroups: DateGroup[];
   themes: Theme[];
   onMemoPress: (memo: Memo) => void;
+  onMemoLongPress?: (memo: Memo) => void;
+  selectedMemos?: string[];
+  selectionMode?: boolean;
+  viewMode?: 'standard' | 'chat';
 }
 
 export const DateGroupedMemos: React.FC<DateGroupedMemosProps> = ({
   dateGroups,
   themes,
-  onMemoPress
+  onMemoPress,
+  onMemoLongPress,
+  selectedMemos = [],
+  selectionMode = false,
+  viewMode = 'standard'
 }) => {
   const [expandedGroups, setExpandedGroups] = useState<string[]>([]);
   
   // 그룹 펼침/접기 토글
-  const toggleGroup = (groupLabel: string) => {
+  const toggleGroup = useCallback((groupLabel: string) => {
     setExpandedGroups(prev => {
       if (prev.includes(groupLabel)) {
         return prev.filter(label => label !== groupLabel);
@@ -27,12 +35,52 @@ export const DateGroupedMemos: React.FC<DateGroupedMemosProps> = ({
         return [...prev, groupLabel];
       }
     });
-  };
+  }, []);
   
   // 그룹이 펼쳐져 있는지 확인
-  const isGroupExpanded = (groupLabel: string) => {
+  const isGroupExpanded = useCallback((groupLabel: string) => {
     return expandedGroups.includes(groupLabel);
-  };
+  }, [expandedGroups]);
+  
+  // 단일 그룹 렌더링 함수
+  const renderGroup = useCallback(({ item }: { item: DateGroup }) => {
+    return (
+      <View style={styles.groupContainer}>
+        <TouchableOpacity 
+          style={styles.groupHeader}
+          onPress={() => toggleGroup(item.label)}
+        >
+          <Text style={styles.groupLabel}>{item.label}</Text>
+          <View style={styles.groupInfo}>
+            <Text style={styles.groupCount}>{item.memos.length}개</Text>
+            <Text style={styles.expandIcon}>
+              {isGroupExpanded(item.label) ? '▼' : '▶'}
+            </Text>
+          </View>
+        </TouchableOpacity>
+        
+        {isGroupExpanded(item.label) && (
+          <View style={styles.memosContainer}>
+            {item.memos.map(memo => (
+              <MemoItem 
+                key={memo.id}
+                memo={memo}
+                themes={themes}
+                onPress={onMemoPress}
+                onLongPress={onMemoLongPress}
+                selected={selectedMemos.includes(memo.id)}
+                selectionMode={selectionMode}
+                viewMode={viewMode}
+              />
+            ))}
+          </View>
+        )}
+      </View>
+    );
+  }, [toggleGroup, isGroupExpanded, themes, onMemoPress, onMemoLongPress, selectedMemos, selectionMode, viewMode]);
+  
+  // keyExtractor 함수 메모이제이션
+  const keyExtractor = useCallback((item: DateGroup) => item.label, []);
   
   if (dateGroups.length === 0) {
     return (
@@ -45,36 +93,12 @@ export const DateGroupedMemos: React.FC<DateGroupedMemosProps> = ({
   return (
     <FlatList
       data={dateGroups}
-      keyExtractor={(item) => item.label}
-      renderItem={({ item }) => (
-        <View style={styles.groupContainer}>
-          <TouchableOpacity 
-            style={styles.groupHeader}
-            onPress={() => toggleGroup(item.label)}
-          >
-            <Text style={styles.groupLabel}>{item.label}</Text>
-            <View style={styles.groupInfo}>
-              <Text style={styles.groupCount}>{item.memos.length}개</Text>
-              <Text style={styles.expandIcon}>
-                {isGroupExpanded(item.label) ? '▼' : '▶'}
-              </Text>
-            </View>
-          </TouchableOpacity>
-          
-          {isGroupExpanded(item.label) && (
-            <View style={styles.memosContainer}>
-              {item.memos.map(memo => (
-                <MemoItem 
-                  key={memo.id}
-                  memo={memo}
-                  themes={themes}
-                  onPress={onMemoPress}
-                />
-              ))}
-            </View>
-          )}
-        </View>
-      )}
+      keyExtractor={keyExtractor}
+      renderItem={renderGroup}
+      initialNumToRender={5}
+      maxToRenderPerBatch={5}
+      windowSize={5}
+      removeClippedSubviews={true}
     />
   );
 };

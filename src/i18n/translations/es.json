@@ -1,0 +1,106 @@
+{
+  "common": {
+    "appName": "Aplicación de Temas de Notas",
+    "memos": "Notas",
+    "memo": "Nota",
+    "themes": "Temas",
+    "theme": "Tema",
+    "noMemos": "No hay notas",
+    "noThemes": "No hay temas",
+    "addNew": "Añadir nuevo",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "close": "Cerrar",
+    "confirm": "Confirmar",
+    "yes": "Sí",
+    "no": "No"
+  },
+  "home": {
+    "title": "Notas",
+    "addMemo": "Añadir Nota",
+    "filterShow": "Mostrar Filtros",
+    "filterHide": "Ocultar Filtros",
+    "chatMode": "Modo Chat",
+    "standardMode": "Modo Estándar",
+    "themeChat": "Chat por Temas",
+    "selectAll": "Seleccionar Todo",
+    "addTheme": "Añadir Tema",
+    "deleteSelected": "Eliminar Seleccionados",
+    "noMemosMessage": "No hay notas",
+    "addNewMemoMessage": "¡Prueba a añadir una nueva nota!",
+    "noFilteredMemosMessage": "No hay notas que coincidan con los criterios de filtro seleccionados.",
+    "resetThemeFilter": "Restablecer Filtro de Temas",
+    "resetDateFilter": "Restablecer Filtro de Fechas"
+  },
+  "filter": {
+    "dateGrouping": "Agrupación por Fecha",
+    "grouping": "Agrupación",
+    "dateRangeFilter": "Filtro de Rango de Fechas",
+    "useAndCondition": "Usar Condición Y",
+    "useOrCondition": "Usar Condición O",
+    "clearFilters": "Limpiar Filtros",
+    "day": "Diario",
+    "month": "Mensual",
+    "year": "Anual"
+  },
+  "memoDetail": {
+    "title": "Detalle de Nota",
+    "edit": "Editar Nota",
+    "delete": "Eliminar Nota",
+    "shareMessage": "¿Te gustaría compartir esta nota?",
+    "deleteMessage": "¿Estás seguro de que quieres eliminar esta nota?",
+    "createdAt": "Creado el",
+    "updatedAt": "Actualizado el"
+  },
+  "themeManagement": {
+    "title": "Gestión de Temas",
+    "addTheme": "Añadir Tema",
+    "editTheme": "Editar Tema",
+    "deleteTheme": "Eliminar Tema",
+    "deleteConfirm": "¿Estás seguro de que quieres eliminar este tema? Se eliminará de todas las notas asociadas.",
+    "emptyThemes": "Aún no hay temas. ¡Prueba a añadir uno nuevo!",
+    "visualizeThemes": "Visualizar Temas"
+  },
+  "themeEdit": {
+    "title": "Editar Tema",
+    "nameLabel": "Nombre del Tema",
+    "descriptionLabel": "Descripción",
+    "colorLabel": "Color",
+    "addKeywords": "Añadir Palabras Clave",
+    "keywordPlaceholder": "Introducir palabra clave",
+    "parentThemeLabel": "Tema Padre"
+  },
+  "themeVisualization": {
+    "title": "Visualización de Temas",
+    "relationshipTab": "Relaciones",
+    "statisticsTab": "Estadísticas",
+    "noThemeSelected": "Selecciona un tema para ver información detallada",
+    "selectedTheme": "Tema Seleccionado",
+    "relatedMemos": "Notas Relacionadas",
+    "parentThemes": "Temas Padre",
+    "childThemes": "Temas Hijo",
+    "memoCount": "Número de Notas",
+    "isolatedThemes": "Temas Aislados"
+  },
+  "themeChatList": {
+    "title": "Chat por Temas",
+    "emptyMessage": "Aún no hay temas. Los temas se crean automáticamente a medida que escribes notas.",
+    "lastMemo": "Última Nota",
+    "memoCount": "{count} Notas"
+  },
+  "settings": {
+    "title": "Ajustes",
+    "language": "Idioma",
+    "languageChange": "Cambiar Idioma",
+    "darkMode": "Modo Oscuro",
+    "notifications": "Notificaciones",
+    "backup": "Copia de Seguridad",
+    "export": "Exportar Datos",
+    "import": "Importar Datos",
+    "about": "Acerca de",
+    "version": "Versión",
+    "feedback": "Enviar Comentarios"
+  }
+} 

@@ -1,6 +1,6 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { useTranslation } from 'react-i18next';
 
 import { HomeScreen } from '../screens/HomeScreen';
 import { MemoDetailScreen } from '../screens/MemoDetailScreen';
@@ -24,23 +24,23 @@ export type RootStackParamList = {
 const Stack = createStackNavigator<RootStackParamList>();
 
 export const AppNavigator = () => {
+  const { t } = useTranslation();
+  
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="Home"
-        screenOptions={{
-          headerShown: false,
-          cardStyle: { backgroundColor: '#fff' }
-        }}
-      >
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="MemoDetail" component={MemoDetailScreen} />
-        <Stack.Screen name="ThemeManagement" component={ThemeManagementScreen} />
-        <Stack.Screen name="ThemeEdit" component={ThemeEditScreen} />
-        <Stack.Screen name="ThemeVisualization" component={ThemeVisualizationScreen} />
-        <Stack.Screen name="ThemeChatList" component={ThemeChatListScreen} />
-        <Stack.Screen name="ThemeChat" component={ThemeChatScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Stack.Navigator
+      initialRouteName="Home"
+      screenOptions={{
+        headerShown: false,
+        cardStyle: { backgroundColor: '#fff' }
+      }}
+    >
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="MemoDetail" component={MemoDetailScreen} />
+      <Stack.Screen name="ThemeManagement" component={ThemeManagementScreen} />
+      <Stack.Screen name="ThemeEdit" component={ThemeEditScreen} />
+      <Stack.Screen name="ThemeVisualization" component={ThemeVisualizationScreen} />
+      <Stack.Screen name="ThemeChatList" component={ThemeChatListScreen} />
+      <Stack.Screen name="ThemeChat" component={ThemeChatScreen} />
+    </Stack.Navigator>
   );
 }; 

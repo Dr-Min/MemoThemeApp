@@ -1,0 +1,106 @@
+{
+  "common": {
+    "appName": "Application de Thèmes de Mémos",
+    "memos": "Mémos",
+    "memo": "Mémo",
+    "themes": "Thèmes",
+    "theme": "Thème",
+    "noMemos": "Pas de mémos",
+    "noThemes": "Pas de thèmes",
+    "addNew": "Ajouter",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "close": "Fermer",
+    "confirm": "Confirmer",
+    "yes": "Oui",
+    "no": "Non"
+  },
+  "home": {
+    "title": "Mémos",
+    "addMemo": "Ajouter un Mémo",
+    "filterShow": "Afficher les Filtres",
+    "filterHide": "Masquer les Filtres",
+    "chatMode": "Mode Chat",
+    "standardMode": "Mode Standard",
+    "themeChat": "Chat par Thème",
+    "selectAll": "Tout Sélectionner",
+    "addTheme": "Ajouter un Thème",
+    "deleteSelected": "Supprimer la Sélection",
+    "noMemosMessage": "Pas de mémos",
+    "addNewMemoMessage": "Essayez d'ajouter un nouveau mémo !",
+    "noFilteredMemosMessage": "Aucun mémo ne correspond aux critères de filtre sélectionnés.",
+    "resetThemeFilter": "Réinitialiser le Filtre de Thèmes",
+    "resetDateFilter": "Réinitialiser le Filtre de Dates"
+  },
+  "filter": {
+    "dateGrouping": "Regroupement par Date",
+    "grouping": "Regroupement",
+    "dateRangeFilter": "Filtre de Plage de Dates",
+    "useAndCondition": "Utiliser la Condition ET",
+    "useOrCondition": "Utiliser la Condition OU",
+    "clearFilters": "Effacer les Filtres",
+    "day": "Quotidien",
+    "month": "Mensuel",
+    "year": "Annuel"
+  },
+  "memoDetail": {
+    "title": "Détail du Mémo",
+    "edit": "Modifier le Mémo",
+    "delete": "Supprimer le Mémo",
+    "shareMessage": "Voulez-vous partager ce mémo ?",
+    "deleteMessage": "Êtes-vous sûr de vouloir supprimer ce mémo ?",
+    "createdAt": "Créé le",
+    "updatedAt": "Mis à jour le"
+  },
+  "themeManagement": {
+    "title": "Gestion des Thèmes",
+    "addTheme": "Ajouter un Thème",
+    "editTheme": "Modifier le Thème",
+    "deleteTheme": "Supprimer le Thème",
+    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce thème ? Il sera retiré de tous les mémos associés.",
+    "emptyThemes": "Pas encore de thèmes. Essayez d'en ajouter un nouveau !",
+    "visualizeThemes": "Visualiser les Thèmes"
+  },
+  "themeEdit": {
+    "title": "Modifier le Thème",
+    "nameLabel": "Nom du Thème",
+    "descriptionLabel": "Description",
+    "colorLabel": "Couleur",
+    "addKeywords": "Ajouter des Mots-clés",
+    "keywordPlaceholder": "Entrer un mot-clé",
+    "parentThemeLabel": "Thème Parent"
+  },
+  "themeVisualization": {
+    "title": "Visualisation des Thèmes",
+    "relationshipTab": "Relations",
+    "statisticsTab": "Statistiques",
+    "noThemeSelected": "Sélectionnez un thème pour voir les informations détaillées",
+    "selectedTheme": "Thème Sélectionné",
+    "relatedMemos": "Mémos Liés",
+    "parentThemes": "Thèmes Parents",
+    "childThemes": "Thèmes Enfants",
+    "memoCount": "Nombre de Mémos",
+    "isolatedThemes": "Thèmes Isolés"
+  },
+  "themeChatList": {
+    "title": "Chat par Thème",
+    "emptyMessage": "Pas encore de thèmes. Les thèmes sont automatiquement créés lorsque vous écrivez des mémos.",
+    "lastMemo": "Dernier Mémo",
+    "memoCount": "{count} Mémos"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "language": "Langue",
+    "languageChange": "Changer de Langue",
+    "darkMode": "Mode Sombre",
+    "notifications": "Notifications",
+    "backup": "Sauvegarde",
+    "export": "Exporter les Données",
+    "import": "Importer les Données",
+    "about": "À Propos",
+    "version": "Version",
+    "feedback": "Envoyer des Commentaires"
+  }
+} 
