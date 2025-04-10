@@ -1,50 +1,63 @@
-# Welcome to your Expo app 👋
+# 메모 테마 앱 (MemoThemeApp)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+자동 테마 분류 기능을 갖춘 메모 앱입니다. 사용자가 작성한 텍스트를 분석하여 적절한 테마(주제)로 자동으로 분류해줍니다.
 
-## Get started
+## 주요 기능
 
-1. Install dependencies
+- **메모 작성 및 관리**: 메모 생성, 수정, 삭제
+- **자동 테마 분류**: 텍스트 내용 분석 후 적절한 테마 할당
+- **계층형 테마 구조**: 상위/하위 테마 관계 설정 및 관리
+- **시간별 자동 분류**: 작성 날짜 기반의 자동 분류
 
-   ```bash
-   npm install
-   ```
+## 기술 스택
 
-2. Start the app
+- React Native / Expo
+- TypeScript
+- Compromise.js (텍스트 분석)
+- AsyncStorage (데이터 저장)
+- React Navigation
 
-   ```bash
-    npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## 설치 방법
 
 ```bash
-npm run reset-project
+# 저장소 복제
+git clone https://github.com/yourusername/MemoThemeApp.git
+
+# 프로젝트 폴더로 이동
+cd MemoThemeApp
+
+# 의존성 설치
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## 실행 방법
 
-## Learn more
+```bash
+# 개발 서버 시작
+npm start
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+Expo 개발 서버가 시작되면 QR 코드를 스캔하거나 iOS/Android 시뮬레이터에서 앱을 열 수 있습니다.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## 폴더 구조
 
-## Join the community
+```
+MemoThemeApp/
+├── src/
+│   ├── models/        # 데이터 모델
+│   ├── services/      # 비즈니스 로직 및 데이터 처리
+│   ├── components/    # 재사용 가능한 UI 컴포넌트
+│   ├── screens/       # 앱 화면
+│   ├── navigation/    # 네비게이션 설정
+│   └── utils/         # 유틸리티 함수
+├── assets/            # 이미지, 폰트 등 정적 리소스
+└── ...                # 기타 설정 파일
+```
 
-Join our community of developers creating universal apps.
+## 다음 개발 단계
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+더 자세한 개발 계획은 [NEXT_STEPS.md](./NEXT_STEPS.md) 파일을 참조하세요.
+
+## 라이선스
+
+MIT
