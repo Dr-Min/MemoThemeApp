@@ -45,6 +45,28 @@
     "month": "Mensual",
     "year": "Anual"
   },
+  "dateFilter": {
+    "filterByDate": "Filtrar por fecha",
+    "all": "Todos",
+    "today": "Hoy",
+    "thisMonth": "Este mes",
+    "thisYear": "Este año",
+    "customRange": "Rango personalizado",
+    "selectRange": "Seleccionar rango",
+    "startDate": "Fecha de inicio",
+    "endDate": "Fecha de fin"
+  },
+  "themeFilter": {
+    "title": "Filtro de temas",
+    "selectThemes": "Seleccionar temas",
+    "selectedThemes": "Temas seleccionados",
+    "filterMode": "Modo de filtro",
+    "andMode": "Modo AND",
+    "orMode": "Modo OR",
+    "noThemes": "No hay temas disponibles",
+    "applyFilter": "Aplicar filtro",
+    "resetFilter": "Restablecer filtro"
+  },
   "memoDetail": {
     "title": "Detalle de Nota",
     "edit": "Editar Nota",

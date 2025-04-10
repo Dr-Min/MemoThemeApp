@@ -94,7 +94,7 @@ export const HomeScreen = ({ navigation }: any) => {
   const [selectionMode, setSelectionMode] = useState(false);
   const [themeSelectionModalVisible, setThemeSelectionModalVisible] = useState(false);
   // 보기 모드 상태 추가 (standard 또는 chat)
-  const [viewMode, setViewMode] = useState<'standard' | 'chat'>('standard');
+  const [viewMode, setViewMode] = useState<'standard' | 'chat'>('chat');
   // 언어 선택 모달 상태 추가
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
   // 현재 언어 상태
@@ -250,46 +250,40 @@ export const HomeScreen = ({ navigation }: any) => {
     }
   };
   
-  // 메모 추가 처리
-  const handleAddMemo = async (text: string, themeIds: string[] = []) => {
-    if (text.trim().length === 0 || isSubmitting) return;
+  // 메모 추가 핸들러
+  const handleAddMemo = async (text: string, initialThemes: string[] = []) => {
+    if (!text || text.trim().length === 0) {
+      return;
+    }
+
+    setIsSubmitting(true);
     
     try {
-      console.log(`메모 추가 시작: ${text}`);
-      setIsLoading(true);
-      setIsSubmitting(true); // 중복 제출 방지
+      // 새 메모 생성
+      const newMemo = createMemo(text, initialThemes);
       
-      let finalThemeIds = themeIds;
+      let addedMemo;
       
-      // themeIds가 비어있으면 테마 자동 분석 및 현재 필터 테마 사용
-      if (themeIds.length === 0) {
-        // 1. 테마 자동 분석 수행
-        const suggestedThemes = await ThemeAnalyzer.analyzeText(text, themes);
-        console.log('추천된 테마:', suggestedThemes);
-        
-        // 2. 현재 필터로 선택된 테마 사용
-        const selectedThemeIds = selectedThemes.map(theme => theme.id);
-        
-        // 3. 두 결과 병합 (중복 제거)
-        finalThemeIds = [...new Set([...suggestedThemes, ...selectedThemeIds])];
+      // 초기 테마가 없으면 테마 분석 수행
+      if (initialThemes.length === 0) {
+        console.log('메모 분석 시작...');
+        addedMemo = await MemoService.analyzeMemoThemes(newMemo, themes);
+        console.log('메모 분석 완료:', addedMemo.themes);
+      } else {
+        // 초기 테마가 있으면 그대로 추가
+        addedMemo = await MemoService.saveMemoObject(newMemo);
       }
       
-      await MemoService.addMemo(text, finalThemeIds);
-      await loadData();
-      
-      // 메모 추가 후 스크롤을 최신 메모로 이동
-      setTimeout(() => {
-        if (flatListRef.current && filteredMemos.length > 0) {
-          flatListRef.current.scrollToEnd({ animated: true });
-        }
-      }, 300);
-      
-      console.log('메모 추가 완료');
+      // 메모 목록 업데이트
+      setMemos(prevMemos => {
+        const updatedMemos = [...prevMemos, addedMemo];
+        return MemoService.sortMemosByDate(updatedMemos);
+      });
     } catch (error) {
       console.error('메모 추가 실패:', error);
+      Alert.alert(t('error'), t('errorAddingMemo'));
     } finally {
-      setIsLoading(false);
-      setIsSubmitting(false); // 제출 상태 초기화
+      setIsSubmitting(false);
     }
   };
 

@@ -1,5 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Memo, createMemo } from '../../models/Memo';
+import { ThemeAnalyzer } from '../theme/ThemeAnalyzer';
+import { ThemeService } from '../theme/ThemeService';
+import { Theme } from '../../models/Theme';
 
 // AsyncStorage 키
 const MEMO_STORAGE_KEY = 'memo_app_memos';
@@ -12,6 +15,66 @@ export interface DateGroup {
 }
 
 export class MemoService {
+  // 문자열 기반 메모 추가 (자동 테마 분석 포함)
+  static async addMemoWithAnalysis(content: string, initialThemes: string[] = []): Promise<Memo> {
+    try {
+      // 초기 테마가 지정되지 않은 경우에만 테마 분석 수행
+      let themeIds = [...initialThemes];
+      
+      if (initialThemes.length === 0) {
+        // 기존 테마 가져오기
+        const allThemes = await ThemeService.getAllThemes();
+        
+        // 테마 분석 수행
+        const suggestedThemes = await ThemeAnalyzer.analyzeText(content, allThemes);
+        
+        if (suggestedThemes && suggestedThemes.length > 0) {
+          themeIds = suggestedThemes;
+        }
+      }
+      
+      // 메모 생성 및 저장
+      return this.addMemo(content, themeIds);
+    } catch (error) {
+      console.error('메모 분석 및 추가 실패:', error);
+      // 오류 발생 시 기본 방식으로 추가
+      return this.addMemo(content, initialThemes);
+    }
+  }
+  
+  // Memo 객체 기반 메모 추가 및 분석
+  static async analyzeMemoThemes(memo: Memo, allThemes: Theme[]): Promise<Memo> {
+    try {
+      // 초기 테마가 지정되지 않은 경우에만 테마 분석 수행
+      let themeIds = [...memo.themes];
+      
+      if (memo.themes.length === 0 && memo.content) {
+        // 테마 분석 수행
+        const suggestedThemes = await ThemeAnalyzer.analyzeText(memo.content, allThemes);
+        
+        if (suggestedThemes && suggestedThemes.length > 0) {
+          themeIds = suggestedThemes;
+        }
+      }
+      
+      // 테마 ID 업데이트
+      const updatedMemo = {
+        ...memo,
+        themes: themeIds
+      };
+      
+      // 메모 저장
+      const memos = await this.getAllMemos();
+      await this.saveMemos([...memos, updatedMemo]);
+      
+      return updatedMemo;
+    } catch (error) {
+      console.error('메모 분석 및 추가 실패:', error);
+      // 오류 발생 시 기본 방식으로 추가
+      return this.saveMemoObject(memo);
+    }
+  }
+
   // 모든 메모 가져오기
   static async getAllMemos(): Promise<Memo[]> {
     try {
@@ -47,7 +110,14 @@ export class MemoService {
     }
   }
 
-  // 새 메모 추가
+  // Memo 객체를 직접 저장하는 함수
+  static async saveMemoObject(memo: Memo): Promise<Memo> {
+    const memos = await this.getAllMemos();
+    await this.saveMemos([...memos, memo]);
+    return memo;
+  }
+  
+  // 문자열 기반 메모 추가 (기존 함수)
   static async addMemo(content: string, themes: string[] = []): Promise<Memo> {
     const memos = await this.getAllMemos();
     const newMemo = createMemo(content, themes);

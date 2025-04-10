@@ -11,6 +11,7 @@ import {
   StatusBar,
   Platform
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { MemoService } from '../services/memo/MemoService';
 import { ThemeService } from '../services/theme/ThemeService';
 import { ThemeAnalyzer } from '../services/theme/ThemeAnalyzer';
@@ -21,6 +22,7 @@ import { Theme } from '../models/Theme';
 const STATUSBAR_HEIGHT = Platform.OS === 'android' ? StatusBar.currentHeight || 24 : 0;
 
 export const MemoDetailScreen = ({ route, navigation }: any) => {
+  const { t } = useTranslation();
   const { memoId } = route.params;
   const [memo, setMemo] = useState<Memo | null>(null);
   const [content, setContent] = useState('');
@@ -40,7 +42,7 @@ export const MemoDetailScreen = ({ route, navigation }: any) => {
         setContent(currentMemo.content);
         setSelectedThemes(currentMemo.themes);
       } else {
-        Alert.alert('오류', '메모를 찾을 수 없습니다.');
+        Alert.alert(t('common.error'), t('memoDetail.notFound', '메모를 찾을 수 없습니다.'));
         navigation.goBack();
       }
       
@@ -106,19 +108,19 @@ export const MemoDetailScreen = ({ route, navigation }: any) => {
       loadData(); // 저장 후 데이터 새로고침
     } catch (error) {
       console.error('메모 저장 실패:', error);
-      Alert.alert('오류', '메모를 저장하는 데 실패했습니다.');
+      Alert.alert(t('common.error'), t('memoDetail.saveError', '메모를 저장하는 데 실패했습니다.'));
     }
   };
   
   // 메모 삭제
   const handleDelete = async () => {
     Alert.alert(
-      '메모 삭제',
-      '이 메모를 삭제하시겠습니까?',
+      t('memoDetail.delete'),
+      t('memoDetail.deleteMessage'),
       [
-        { text: '취소', style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         { 
-          text: '삭제', 
+          text: t('common.delete'), 
           style: 'destructive',
           onPress: async () => {
             try {
@@ -127,7 +129,7 @@ export const MemoDetailScreen = ({ route, navigation }: any) => {
               navigation.goBack();
             } catch (error) {
               console.error('메모 삭제 실패:', error);
-              Alert.alert('오류', '메모를 삭제하는 데 실패했습니다.');
+              Alert.alert(t('common.error'), t('memoDetail.deleteError', '메모를 삭제하는 데 실패했습니다.'));
             }
           }
         }
@@ -146,14 +148,14 @@ export const MemoDetailScreen = ({ route, navigation }: any) => {
   
   // 날짜 포맷팅
   const formatDate = (date: Date | string | null | undefined) => {
-    if (!date) return '날짜 정보 없음';
+    if (!date) return t('common.noDateInfo', '날짜 정보 없음');
     
     try {
       const d = date instanceof Date ? date : new Date(date);
       return `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')} ${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
     } catch (error) {
       console.error('날짜 포맷팅 실패:', error);
-      return '날짜 형식 오류';
+      return t('common.dateFormatError', '날짜 형식 오류');
     }
   };
   
@@ -162,7 +164,7 @@ export const MemoDetailScreen = ({ route, navigation }: any) => {
       <View style={styles.safeContainer}>
         <StatusBar barStyle="dark-content" backgroundColor="#f5f5f5" />
         <SafeAreaView style={styles.container}>
-          <Text>로딩 중...</Text>
+          <Text>{t('common.loading', '로딩 중...')}</Text>
         </SafeAreaView>
       </View>
     );
@@ -174,7 +176,7 @@ export const MemoDetailScreen = ({ route, navigation }: any) => {
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Text style={styles.backButton}>{'← 뒤로'}</Text>
+            <Text style={styles.backButton}>{t('common.back')}</Text>
           </TouchableOpacity>
           
           <View style={styles.headerButtons}>
@@ -188,14 +190,14 @@ export const MemoDetailScreen = ({ route, navigation }: any) => {
                     setIsEditing(false);
                   }}
                 >
-                  <Text style={styles.cancelButtonText}>취소</Text>
+                  <Text style={styles.cancelButtonText}>{t('common.cancel')}</Text>
                 </TouchableOpacity>
                 
                 <TouchableOpacity 
                   style={styles.saveButton} 
                   onPress={handleSave}
                 >
-                  <Text style={styles.saveButtonText}>저장</Text>
+                  <Text style={styles.saveButtonText}>{t('common.save')}</Text>
                 </TouchableOpacity>
               </>
             ) : (
@@ -204,14 +206,14 @@ export const MemoDetailScreen = ({ route, navigation }: any) => {
                   style={styles.editButton} 
                   onPress={() => setIsEditing(true)}
                 >
-                  <Text style={styles.editButtonText}>편집</Text>
+                  <Text style={styles.editButtonText}>{t('common.edit')}</Text>
                 </TouchableOpacity>
                 
                 <TouchableOpacity 
                   style={styles.deleteButton} 
                   onPress={handleDelete}
                 >
-                  <Text style={styles.deleteButtonText}>삭제</Text>
+                  <Text style={styles.deleteButtonText}>{t('common.delete')}</Text>
                 </TouchableOpacity>
               </>
             )}
@@ -220,7 +222,7 @@ export const MemoDetailScreen = ({ route, navigation }: any) => {
         
         <ScrollView style={styles.content}>
           <View style={styles.dateContainer}>
-            <Text style={styles.dateLabel}>작성일:</Text>
+            <Text style={styles.dateLabel}>{t('memoDetail.createdAt')}:</Text>
             <Text style={styles.dateValue}>{formatDate(memo.createdAt)}</Text>
           </View>
           
@@ -230,7 +232,7 @@ export const MemoDetailScreen = ({ route, navigation }: any) => {
              (!(memo.updatedAt instanceof Date) && !(memo.createdAt instanceof Date) && 
               new Date(memo.updatedAt).getTime() !== new Date(memo.createdAt).getTime())) && (
             <View style={styles.dateContainer}>
-              <Text style={styles.dateLabel}>수정일:</Text>
+              <Text style={styles.dateLabel}>{t('memoDetail.updatedAt')}:</Text>
               <Text style={styles.dateValue}>{formatDate(memo.updatedAt)}</Text>
             </View>
           )}
@@ -248,7 +250,7 @@ export const MemoDetailScreen = ({ route, navigation }: any) => {
           )}
           
           <View style={styles.themesSection}>
-            <Text style={styles.themesTitle}>테마</Text>
+            <Text style={styles.themesTitle}>{t('common.theme')}</Text>
             
             <View style={styles.themesList}>
               {themes.map(theme => (
@@ -274,7 +276,7 @@ export const MemoDetailScreen = ({ route, navigation }: any) => {
               
               {themes.length === 0 && (
                 <Text style={styles.noThemesText}>
-                  생성된 테마가 없습니다. 테마 관리 화면에서 테마를 추가해보세요.
+                  {t('themeManagement.emptyThemes')}
                 </Text>
               )}
             </View>

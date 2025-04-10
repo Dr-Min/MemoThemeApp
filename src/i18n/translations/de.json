@@ -45,6 +45,28 @@
     "month": "Monatlich",
     "year": "Jährlich"
   },
+  "dateFilter": {
+    "filterByDate": "Nach Datum filtern",
+    "all": "Alle",
+    "today": "Heute",
+    "thisMonth": "Diesen Monat",
+    "thisYear": "Dieses Jahr",
+    "customRange": "Benutzerdefinierter Bereich",
+    "selectRange": "Bereich auswählen",
+    "startDate": "Startdatum",
+    "endDate": "Enddatum"
+  },
+  "themeFilter": {
+    "title": "Themenfilter",
+    "selectThemes": "Themen auswählen",
+    "selectedThemes": "Ausgewählte Themen",
+    "filterMode": "Filtermodus",
+    "andMode": "UND-Modus",
+    "orMode": "ODER-Modus",
+    "noThemes": "Keine Themen verfügbar",
+    "applyFilter": "Filter anwenden",
+    "resetFilter": "Filter zurücksetzen"
+  },
   "memoDetail": {
     "title": "Notiz-Details",
     "edit": "Notiz bearbeiten",

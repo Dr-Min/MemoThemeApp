@@ -1,5 +1,16 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Platform } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Platform, Modal } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+import { format } from 'date-fns';
+import { useTranslation } from 'react-i18next';
+
+// DateTimePicker 타입 선언
+interface DateTimePickerEvent {
+  type: string;
+  nativeEvent: {
+    timestamp?: number;
+  };
+}
 
 // 필터 모드 타입
 export type DateFilterMode = 'day' | 'month' | 'year' | 'range' | 'all';
@@ -9,113 +20,223 @@ interface DateFilterProps {
   currentMode: DateFilterMode;
   startDate?: Date;
   endDate?: Date;
+  style?: any;
 }
 
 export const DateFilter: React.FC<DateFilterProps> = ({
   onFilterChange,
   currentMode,
   startDate,
-  endDate
+  endDate,
+  style
 }) => {
-  // 현재 날짜
-  const today = new Date();
+  const { t } = useTranslation();
   
-  // 날짜 포맷팅 함수
-  const formatDate = (date?: Date): string => {
-    if (!date) return '';
-    return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
-  };
-  
-  // 모드별 버튼 생성
-  const renderFilterButton = (label: string, mode: DateFilterMode, start?: Date, end?: Date) => {
-    const isActive = currentMode === mode;
-    
-    if (mode === 'range' && !startDate && !endDate) {
-      return null;
-    }
-    
-    return (
-      <TouchableOpacity
-        style={[styles.filterButton, isActive && styles.activeFilterButton]}
-        onPress={() => onFilterChange(mode, start, end)}
-      >
-        <Text style={[styles.filterButtonText, isActive && styles.activeFilterButtonText]}>
-          {label}
-        </Text>
-      </TouchableOpacity>
-    );
-  };
-  
-  // 날짜 선택기 열기 (원래는 DatePicker를 사용하겠지만, 여기서는 간단하게 구현)
-  const openDatePicker = (isStartDate: boolean) => {
-    // 실제 구현시 DatePicker 사용
-    // 현재는 간단히 오늘 날짜에서 +/- 7일로 구현
-    const newDate = new Date();
-    if (isStartDate) {
-      newDate.setDate(newDate.getDate() - 7);
-      onFilterChange('range', newDate, endDate || today);
-    } else {
-      onFilterChange('range', startDate || new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7), newDate);
-    }
-  };
+  const [showStartPicker, setShowStartPicker] = useState(false);
+  const [showEndPicker, setShowEndPicker] = useState(false);
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [tempStartDate, setTempStartDate] = useState<Date | undefined>(startDate);
+  const [tempEndDate, setTempEndDate] = useState<Date | undefined>(endDate);
+  const [tempMode, setTempMode] = useState<DateFilterMode>(currentMode);
   
   // 필터 모드에 따른 제목 가져오기
-  const getFilterTitle = (): string => {
+  const getFilterTitle = () => {
     switch (currentMode) {
+      case 'all':
+        return t('dateFilter.all');
       case 'day':
-        return '오늘';
+        return t('dateFilter.today');
       case 'month':
-        return `${today.getFullYear()}년 ${today.getMonth() + 1}월`;
+        return t('dateFilter.thisMonth');
       case 'year':
-        return `${today.getFullYear()}년`;
+        return t('dateFilter.thisYear');
       case 'range':
-        return `${formatDate(startDate)} ~ ${formatDate(endDate)}`;
+        if (startDate && endDate) {
+          return `${format(startDate, 'yyyy.MM.dd')} - ${format(endDate, 'yyyy.MM.dd')}`;
+        }
+        return t('dateFilter.selectRange');
       default:
-        return '전체 기간';
+        return t('dateFilter.all');
+    }
+  };
+
+  const filterOptions: { key: DateFilterMode; label: string }[] = [
+    { key: 'all', label: t('dateFilter.all') },
+    { key: 'day', label: t('dateFilter.today') },
+    { key: 'month', label: t('dateFilter.thisMonth') },
+    { key: 'year', label: t('dateFilter.thisYear') },
+    { key: 'range', label: t('dateFilter.customRange') }
+  ];
+
+  const handleOpenModal = () => {
+    setTempStartDate(startDate);
+    setTempEndDate(endDate);
+    setTempMode(currentMode);
+    setShowFilterModal(true);
+  };
+
+  const handleApplyFilter = () => {
+    onFilterChange(tempMode, tempStartDate, tempEndDate);
+    setShowFilterModal(false);
+  };
+
+  const handleDateChange = (isStartDate: boolean, date?: Date) => {
+    if (!date) return;
+
+    if (isStartDate) {
+      setTempStartDate(date);
+      // 만약 시작일이 종료일보다 나중이면 종료일을 시작일로 설정
+      if (tempEndDate && date > tempEndDate) {
+        setTempEndDate(date);
+      }
+    } else {
+      // 만약 종료일이 시작일보다 이르면 시작일을 유지
+      if (tempStartDate && date < tempStartDate) {
+        setTempEndDate(tempStartDate);
+      } else {
+        setTempEndDate(date);
+      }
     }
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>날짜별 분류</Text>
-        <Text style={styles.currentFilter}>{getFilterTitle()}</Text>
-      </View>
-      
-      <View style={styles.buttonsContainer}>
-        {renderFilterButton('전체', 'all')}
-        {renderFilterButton('오늘', 'day', 
-          new Date(today.getFullYear(), today.getMonth(), today.getDate()),
-          new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59)
-        )}
-        {renderFilterButton('이번 달', 'month', 
-          new Date(today.getFullYear(), today.getMonth(), 1),
-          new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59)
-        )}
-        {renderFilterButton('올해', 'year', 
-          new Date(today.getFullYear(), 0, 1),
-          new Date(today.getFullYear(), 11, 31, 23, 59, 59)
-        )}
-        {renderFilterButton('사용자 지정', 'range', startDate, endDate)}
-      </View>
-      
-      {currentMode === 'range' && (
-        <View style={styles.dateRangeContainer}>
-          <TouchableOpacity style={styles.dateButton} onPress={() => openDatePicker(true)}>
-            <Text style={styles.dateButtonText}>
-              {startDate ? formatDate(startDate) : '시작일 선택'}
-            </Text>
-          </TouchableOpacity>
-          <Text style={styles.dateRangeSeparator}>~</Text>
-          <TouchableOpacity style={styles.dateButton} onPress={() => openDatePicker(false)}>
-            <Text style={styles.dateButtonText}>
-              {endDate ? formatDate(endDate) : '종료일 선택'}
-            </Text>
-          </TouchableOpacity>
+    <View style={[styles.container, style]}>
+      <TouchableOpacity
+        style={styles.header}
+        onPress={handleOpenModal}
+      >
+        <Text style={styles.title}>{t('dateFilter.filterByDate')}</Text>
+        <View style={styles.currentFilter}>
+          <Text style={styles.currentFilterText}>{getFilterTitle()}</Text>
+          <FontAwesome name="angle-down" size={16} color="#666" />
         </View>
+      </TouchableOpacity>
+
+      <Modal
+        visible={showFilterModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowFilterModal(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>{t('dateFilter.filterByDate')}</Text>
+              <TouchableOpacity onPress={() => setShowFilterModal(false)}>
+                <Text style={styles.closeButton}>{t('common.close')}</Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.buttons}>
+              {filterOptions.map((option) => (
+                <TouchableOpacity
+                  key={option.key}
+                  style={[styles.button, tempMode === option.key && styles.selectedButton]}
+                  onPress={() => setTempMode(option.key)}
+                >
+                  <Text style={[styles.buttonText, tempMode === option.key && styles.selectedButtonText]}>
+                    {option.label}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            {tempMode === 'range' && (
+              <View style={styles.dateRangeSelection}>
+                <View style={styles.dateRow}>
+                  <Text style={styles.dateLabel}>{t('dateFilter.startDate')}</Text>
+                  <TouchableOpacity
+                    style={styles.datePickerButton}
+                    onPress={() => setShowStartPicker(true)}
+                  >
+                    <Text style={styles.datePickerButtonText}>
+                      {tempStartDate ? format(tempStartDate, 'yyyy.MM.dd') : t('dateFilter.startDate')}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.dateRow}>
+                  <Text style={styles.dateLabel}>{t('dateFilter.endDate')}</Text>
+                  <TouchableOpacity
+                    style={styles.datePickerButton}
+                    onPress={() => setShowEndPicker(true)}
+                  >
+                    <Text style={styles.datePickerButtonText}>
+                      {tempEndDate ? format(tempEndDate, 'yyyy.MM.dd') : t('dateFilter.endDate')}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
+
+            <TouchableOpacity
+              style={styles.applyButton}
+              onPress={handleApplyFilter}
+            >
+              <Text style={styles.applyButtonText}>{t('common.apply')}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {Platform.OS === 'ios' && showStartPicker && (
+        <DatePickerIOS
+          date={tempStartDate || new Date()}
+          onDateChange={date => handleDateChange(true, date)}
+          mode="date"
+        />
+      )}
+
+      {Platform.OS === 'ios' && showEndPicker && (
+        <DatePickerIOS
+          date={tempEndDate || new Date()}
+          onDateChange={date => handleDateChange(false, date)}
+          mode="date"
+        />
+      )}
+
+      {Platform.OS === 'android' && showStartPicker && (
+        <DatePickerDialog 
+          date={tempStartDate || new Date()} 
+          onConfirm={(date) => {
+            setShowStartPicker(false);
+            handleDateChange(true, date);
+          }}
+          onCancel={() => setShowStartPicker(false)}
+        />
+      )}
+
+      {Platform.OS === 'android' && showEndPicker && (
+        <DatePickerDialog 
+          date={tempEndDate || new Date()} 
+          onConfirm={(date) => {
+            setShowEndPicker(false);
+            handleDateChange(false, date);
+          }}
+          onCancel={() => setShowEndPicker(false)}
+        />
       )}
     </View>
   );
+};
+
+// 날짜 선택기 대체용 컴포넌트
+const DatePickerIOS: React.FC<{
+  date: Date;
+  onDateChange: (date: Date) => void;
+  mode: string;
+}> = ({ date, onDateChange }) => {
+  // 임시로 비워두고, 실제 사용 시 react-native-community/datetimepicker 구현
+  return null;
+};
+
+// 안드로이드 날짜 선택 다이얼로그 대체용 컴포넌트
+const DatePickerDialog: React.FC<{
+  date: Date;
+  onConfirm: (date: Date) => void;
+  onCancel: () => void;
+}> = ({ date, onConfirm, onCancel }) => {
+  // 임시로 비워두고, 실제 사용 시 react-native-community/datetimepicker 구현
+  return null;
 };
 
 const styles = StyleSheet.create({
@@ -137,14 +258,47 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   currentFilter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  currentFilterText: {
     fontSize: 14,
     color: '#007AFF',
   },
-  buttonsContainer: {
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+    maxHeight: '80%',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  modalTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  closeButton: {
+    fontSize: 14,
+    color: '#007AFF',
+  },
+  buttons: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    marginBottom: 12,
   },
-  filterButton: {
+  button: {
     backgroundColor: '#eaeaea',
     paddingHorizontal: 12,
     paddingVertical: 6,
@@ -152,36 +306,68 @@ const styles = StyleSheet.create({
     marginRight: 8,
     marginBottom: 8,
   },
-  activeFilterButton: {
+  selectedButton: {
     backgroundColor: '#007AFF',
   },
-  filterButtonText: {
+  buttonText: {
     fontSize: 14,
     color: '#444',
   },
-  activeFilterButtonText: {
+  selectedButtonText: {
     color: '#fff',
   },
-  dateRangeContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 8,
+  rangeContainer: {
+    marginBottom: 12,
   },
-  dateButton: {
+  rangeButton: {
     backgroundColor: '#eaeaea',
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 8,
-    flex: 1,
   },
-  dateButtonText: {
+  selectedRangeButton: {
+    backgroundColor: '#007AFF',
+  },
+  rangeButtonText: {
     fontSize: 14,
     color: '#444',
-    textAlign: 'center',
   },
-  dateRangeSeparator: {
-    marginHorizontal: 8,
-    fontSize: 16,
+  selectedRangeButtonText: {
+    color: '#fff',
+  },
+  dateRangeSelection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  dateRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 8,
+  },
+  dateLabel: {
+    fontSize: 14,
     color: '#666',
+  },
+  datePickerButton: {
+    backgroundColor: '#eaeaea',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+  },
+  datePickerButtonText: {
+    fontSize: 14,
+    color: '#444',
+  },
+  applyButton: {
+    backgroundColor: '#007AFF',
+    padding: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  applyButtonText: {
+    fontSize: 14,
+    color: '#fff',
+    fontWeight: 'bold',
   },
 }); 

@@ -45,6 +45,28 @@
     "month": "По месяцам",
     "year": "По годам"
   },
+  "dateFilter": {
+    "filterByDate": "Фильтр по дате",
+    "all": "Все",
+    "today": "Сегодня",
+    "thisMonth": "Этот месяц",
+    "thisYear": "Этот год",
+    "customRange": "Произвольный период",
+    "selectRange": "Выбрать период",
+    "startDate": "Дата начала",
+    "endDate": "Дата окончания"
+  },
+  "themeFilter": {
+    "title": "Фильтр тем",
+    "selectThemes": "Выбрать темы",
+    "selectedThemes": "Выбранные темы",
+    "filterMode": "Режим фильтра",
+    "andMode": "Режим И",
+    "orMode": "Режим ИЛИ",
+    "noThemes": "Нет доступных тем",
+    "applyFilter": "Применить фильтр",
+    "resetFilter": "Сбросить фильтр"
+  },
   "memoDetail": {
     "title": "Детали Заметки",
     "edit": "Редактировать Заметку",

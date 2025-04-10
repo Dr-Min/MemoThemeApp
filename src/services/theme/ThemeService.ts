@@ -15,7 +15,7 @@ export class ThemeService {
       // JSON 파싱
       const parsedThemes = JSON.parse(themesJson);
       
-      // 필드 정확히 처리
+      // 필드 정확히 처리 (icon 필드 추가)
       return parsedThemes.map((theme: any) => ({
         ...theme,
         // keywords가 undefined인 경우 빈 배열로 초기화
@@ -23,7 +23,9 @@ export class ThemeService {
         // childThemes가 undefined인 경우 빈 배열로 초기화
         childThemes: Array.isArray(theme.childThemes) ? theme.childThemes : [],
         // description이 없는 경우 빈 문자열로 초기화
-        description: theme.description || ''
+        description: theme.description || '',
+        // icon이 없는 경우 기본 아이콘 'label' 설정
+        icon: theme.icon || 'label' 
       }));
     } catch (error) {
       console.error('테마 불러오기 실패:', error);
@@ -41,14 +43,16 @@ export class ThemeService {
     }
   }
 
-  // 새 테마 추가
+  // 새 테마 추가 (icon 추가)
   static async addTheme(
     name: string, 
     keywords: string[] = [], 
-    parentTheme: string | null = null
+    parentTheme: string | null = null,
+    icon: string = 'label' // icon 매개변수 추가
   ): Promise<Theme> {
     const themes = await this.getAllThemes();
-    const newTheme = createTheme(name, keywords, parentTheme);
+    // createTheme 호출 시 icon 전달
+    const newTheme = createTheme(name, keywords, parentTheme, [], '', icon);
     
     // 상위 테마가 있으면 해당 테마의 하위 테마 목록에 새 테마 추가
     if (parentTheme) {

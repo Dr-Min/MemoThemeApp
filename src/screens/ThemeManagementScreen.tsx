@@ -15,11 +15,13 @@ import {
 import { ThemeItem } from '../components/ThemeItem';
 import { ThemeService } from '../services/theme/ThemeService';
 import { Theme } from '../models/Theme';
+import { useTranslation } from 'react-i18next';
 
 // 상태바 높이 계산 (플랫폼별 처리)
 const STATUSBAR_HEIGHT = Platform.OS === 'android' ? StatusBar.currentHeight || 24 : 0;
 
 export const ThemeManagementScreen = ({ navigation, route }: any) => {
+  const { t } = useTranslation();
   const [themes, setThemes] = useState<Theme[]>([]);
   const [parentTheme, setParentTheme] = useState<Theme | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -63,7 +65,7 @@ export const ThemeManagementScreen = ({ navigation, route }: any) => {
   // 새 테마 추가
   const handleAddTheme = async () => {
     if (themeName.trim().length === 0) {
-      Alert.alert('오류', '테마 이름을 입력해주세요.');
+      Alert.alert(t('error'), t('themeEdit.nameRequired'));
       return;
     }
     
@@ -89,7 +91,7 @@ export const ThemeManagementScreen = ({ navigation, route }: any) => {
       loadThemes();
     } catch (error) {
       console.error('테마 추가 실패:', error);
-      Alert.alert('오류', '테마를 추가하는 데 실패했습니다.');
+      Alert.alert(t('error'), t('themeManagement.addThemeError'));
     }
   };
   
@@ -126,27 +128,27 @@ export const ThemeManagementScreen = ({ navigation, route }: any) => {
         <View style={styles.header}>
           {parentTheme ? (
             <TouchableOpacity onPress={goBack} style={styles.backButton}>
-              <Text style={styles.backButtonText}>{'← 뒤로'}</Text>
+              <Text style={styles.backButtonText}>{t('common.back')}</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity onPress={goBack}>
-              <Text style={styles.backButtonText}>{'← 메모로'}</Text>
+              <Text style={styles.backButtonText}>{t('themeManagement.backToMemo')}</Text>
             </TouchableOpacity>
           )}
           
           <Text style={styles.title}>
-            {parentTheme ? parentTheme.name : '테마 관리'}
+            {parentTheme ? parentTheme.name : t('themeManagement.title')}
           </Text>
           
           <View style={styles.headerButtons}>
             <TouchableOpacity onPress={goToThemeChatList} style={styles.visualizeButton}>
-              <Text style={styles.visualizeButtonText}>채팅</Text>
+              <Text style={styles.visualizeButtonText}>{t('themeChatList.title')}</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={goToThemeVisualization} style={styles.visualizeButton}>
-              <Text style={styles.visualizeButtonText}>통계</Text>
+              <Text style={styles.visualizeButtonText}>{t('themeVisualization.statisticsTab')}</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => setModalVisible(true)}>
-              <Text style={styles.addButton}>+ 추가</Text>
+              <Text style={styles.addButton}>+ {t('common.addNew')}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -167,8 +169,8 @@ export const ThemeManagementScreen = ({ navigation, route }: any) => {
               <View style={styles.emptyContainer}>
                 <Text style={styles.emptyText}>
                   {parentTheme 
-                    ? '하위 테마가 없습니다. 새 테마를 추가해보세요!' 
-                    : '테마가 없습니다. 새 테마를 추가해보세요!'}
+                    ? t('themeManagement.noSubThemes') 
+                    : t('themeManagement.emptyThemes')}
                 </Text>
               </View>
             ) : null
@@ -185,45 +187,43 @@ export const ThemeManagementScreen = ({ navigation, route }: any) => {
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
               <Text style={styles.modalTitle}>
-                {parentTheme ? `${parentTheme.name}의 하위 테마 추가` : '새 테마 추가'}
+                {parentTheme 
+                  ? t('themeManagement.addSubTheme', { parent: parentTheme.name }) 
+                  : t('themeManagement.addTheme')}
               </Text>
               
               <TextInput
                 style={styles.input}
                 value={themeName}
                 onChangeText={setThemeName}
-                placeholder="테마 이름"
+                placeholder={t('themeEdit.nameLabel')}
               />
               
               <TextInput
                 style={styles.input}
                 value={keywords}
                 onChangeText={setKeywords}
-                placeholder="키워드 (쉼표로 구분)"
+                placeholder={t('themeEdit.keywordPlaceholder')}
                 multiline
               />
               
               <View style={styles.modalButtons}>
                 <TouchableOpacity 
                   style={styles.cancelButton} 
-                  onPress={() => {
-                    setThemeName('');
-                    setKeywords('');
-                    setModalVisible(false);
-                  }}
+                  onPress={() => setModalVisible(false)}
                 >
-                  <Text style={styles.cancelButtonText}>취소</Text>
+                  <Text style={styles.cancelButtonText}>{t('common.cancel')}</Text>
                 </TouchableOpacity>
                 
                 <TouchableOpacity 
                   style={[
-                    styles.saveButton,
+                    styles.saveButton, 
                     themeName.trim().length === 0 ? styles.saveButtonDisabled : {}
                   ]} 
                   onPress={handleAddTheme}
                   disabled={themeName.trim().length === 0}
                 >
-                  <Text style={styles.saveButtonText}>저장</Text>
+                  <Text style={styles.saveButtonText}>{t('common.save')}</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -269,8 +269,9 @@ const styles = StyleSheet.create({
     color: '#007AFF',
   },
   addButton: {
-    fontSize: 16,
     color: '#007AFF',
+    fontSize: 16,
+    fontWeight: '500',
   },
   list: {
     flex: 1,
@@ -345,7 +346,6 @@ const styles = StyleSheet.create({
   saveButtonText: {
     fontSize: 16,
     color: 'white',
-    fontWeight: '600',
   },
   headerButtons: {
     flexDirection: 'row',

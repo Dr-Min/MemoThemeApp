@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Modal, FlatList, TextInput } from 'react-native';
 import { Theme } from '../models/Theme';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AntDesign } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 
 // 검색 히스토리 저장 키
 const THEME_FILTER_HISTORY_KEY = 'memo_app_theme_filter_history';
@@ -31,6 +33,7 @@ export const ThemeFilter: React.FC<ThemeFilterProps> = ({
   useAndCondition,
   onFilterModeChange
 }) => {
+  const { t } = useTranslation();
   // 검색 히스토리
   const [filterHistory, setFilterHistory] = useState<SavedFilter[]>([]);
   // 즐겨찾기 필터
@@ -39,6 +42,9 @@ export const ThemeFilter: React.FC<ThemeFilterProps> = ({
   const [showHistoryModal, setShowHistoryModal] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [filterName, setFilterName] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [searchText, setSearchText] = useState('');
+  const [filteredThemes, setFilteredThemes] = useState<Theme[]>(themes);
 
   // 검색 히스토리 로드
   useEffect(() => {
@@ -47,10 +53,10 @@ export const ThemeFilter: React.FC<ThemeFilterProps> = ({
 
   // 디버깅 정보 출력
   useEffect(() => {
-    console.log('ThemeFilter - 현재 데이터:');
-    console.log('- 사용 가능한 테마:', themes.map(t => ({id: t.id, name: t.name})));
-    console.log('- 선택된 테마 IDs:', selectedThemes);
-    console.log('- 선택된 테마 이름:', selectedThemes.map(id => 
+    console.log('ThemeFilter - Current data:');
+    console.log('- Available themes:', themes.map(t => ({id: t.id, name: t.name})));
+    console.log('- Selected theme IDs:', selectedThemes);
+    console.log('- Selected theme names:', selectedThemes.map(id => 
       themes.find(t => t.id === id)?.name
     ));
   }, [themes, selectedThemes]);
@@ -62,6 +68,21 @@ export const ThemeFilter: React.FC<ThemeFilterProps> = ({
     }
   }, [selectedThemes, useAndCondition]);
 
+  useEffect(() => {
+    setFilteredThemes(themes);
+  }, [themes]);
+
+  useEffect(() => {
+    if (searchText) {
+      const filtered = themes.filter(theme => 
+        theme.name.toLowerCase().includes(searchText.toLowerCase())
+      );
+      setFilteredThemes(filtered);
+    } else {
+      setFilteredThemes(themes);
+    }
+  }, [searchText, themes]);
+
   // 테마 ID로 테마 객체 가져오기
   const getThemeById = (id: string) => themes.find(theme => theme.id === id);
 
@@ -72,7 +93,7 @@ export const ThemeFilter: React.FC<ThemeFilterProps> = ({
       setFilterHistory(data.history || []);
       setSavedFilters(data.saved || []);
     } catch (error) {
-      console.error('필터 히스토리 로드 실패:', error);
+      console.error(`${t('error')}: ${t('themeFilter.failedToLoadHistory')}`, error);
     }
   };
 
@@ -84,7 +105,7 @@ export const ThemeFilter: React.FC<ThemeFilterProps> = ({
       };
       await AsyncStorage.setItem(THEME_FILTER_HISTORY_KEY, JSON.stringify(data));
     } catch (error) {
-      console.error('필터 히스토리 저장 실패:', error);
+      console.error(`${t('error')}: ${t('themeFilter.failedToSaveHistory')}`, error);
     }
   };
 
@@ -105,7 +126,7 @@ export const ThemeFilter: React.FC<ThemeFilterProps> = ({
       setFilterHistory([
         {
           id: Date.now().toString(),
-          name: `검색 ${new Date().toLocaleString('ko-KR')}`,
+          name: `${t('common.search')} ${new Date().toLocaleString('ko-KR')}`,
           themeIds: [...selectedThemes],
           useAndCondition
         },
@@ -116,7 +137,7 @@ export const ThemeFilter: React.FC<ThemeFilterProps> = ({
       setFilterHistory(prev => [
         {
           id: Date.now().toString(),
-          name: `검색 ${new Date().toLocaleString('ko-KR')}`,
+          name: `${t('common.search')} ${new Date().toLocaleString('ko-KR')}`,
           themeIds: [...selectedThemes],
           useAndCondition
         },
@@ -161,34 +182,53 @@ export const ThemeFilter: React.FC<ThemeFilterProps> = ({
     saveFilterHistory();
   };
 
+  const toggleModal = () => {
+    setModalVisible(!modalVisible);
+    setSearchText('');
+  };
+
+  const renderThemeItem = ({ item }: { item: Theme }) => {
+    const isSelected = selectedThemes.includes(item.id);
+    
+    return (
+      <TouchableOpacity
+        style={[styles.themeItem, isSelected && styles.themeItemSelected]}
+        onPress={() => onThemeSelect(item.id)}
+      >
+        <Text style={[styles.themeItemText, isSelected && styles.selectedThemeItemText]}>
+          {item.name}
+        </Text>
+        {isSelected && (
+          <AntDesign name="check" size={16} color="#fff" style={styles.checkIcon} />
+        )}
+      </TouchableOpacity>
+    );
+  };
+
+  const getSelectedThemesText = () => {
+    if (selectedThemes.length === 0) {
+      return t('themeFilter.allThemes');
+    }
+    
+    const selectedThemeNames = themes
+      .filter(theme => selectedThemes.includes(theme.id))
+      .map(theme => theme.name);
+    
+    if (selectedThemeNames.length <= 2) {
+      return selectedThemeNames.join(', ');
+    }
+    
+    return t('themeFilter.multipleSelected', { count: selectedThemes.length });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>테마 필터</Text>
-        <View style={styles.headerButtons}>
-          {selectedThemes.length > 0 && (
-            <>
-              <TouchableOpacity 
-                onPress={() => setShowSaveModal(true)} 
-                style={styles.actionButton}
-              >
-                <Text style={styles.actionButtonText}>저장</Text>
-              </TouchableOpacity>
-              <TouchableOpacity 
-                onPress={onClearFilters}
-                style={styles.actionButton}
-              >
-                <Text style={styles.actionButtonText}>초기화</Text>
-              </TouchableOpacity>
-            </>
-          )}
-          <TouchableOpacity 
-            onPress={() => setShowHistoryModal(true)}
-            style={styles.actionButton}
-          >
-            <Text style={styles.actionButtonText}>히스토리</Text>
-          </TouchableOpacity>
-        </View>
+        <Text style={styles.title}>{t('themeFilter.title')}</Text>
+        <TouchableOpacity onPress={toggleModal} style={styles.button}>
+          <Text style={styles.buttonText}>{getSelectedThemesText()}</Text>
+          <AntDesign name="down" size={12} color="#666" style={styles.icon} />
+        </TouchableOpacity>
       </View>
       
       <ScrollView 
@@ -199,7 +239,7 @@ export const ThemeFilter: React.FC<ThemeFilterProps> = ({
         persistentScrollbar={true}
       >
         <View style={styles.themesContainer}>
-          {themes.map((theme) => (
+          {filteredThemes.map((theme) => (
             <TouchableOpacity
               key={theme.id}
               style={[
@@ -225,7 +265,7 @@ export const ThemeFilter: React.FC<ThemeFilterProps> = ({
       {selectedThemes.length > 0 && (
         <>
           <View style={styles.selectedContainer}>
-            <Text style={styles.selectedLabel}>선택된 테마:</Text>
+            <Text style={styles.selectedLabel}>{t('themeFilter.selectedThemes')}:</Text>
             <View style={styles.selectedThemes}>
               {selectedThemes.map((id) => (
                 <Text key={id} style={styles.selectedThemeItem}>
@@ -236,7 +276,7 @@ export const ThemeFilter: React.FC<ThemeFilterProps> = ({
           </View>
           
           <View style={styles.filterModeContainer}>
-            <Text style={styles.filterModeLabel}>필터 모드:</Text>
+            <Text style={styles.filterModeLabel}>{t('themeFilter.filterMode')}:</Text>
             <View style={styles.filterModeOptions}>
               <TouchableOpacity 
                 style={[styles.modeButton, !useAndCondition && styles.activeModeButton]} 
@@ -265,15 +305,15 @@ export const ThemeFilter: React.FC<ThemeFilterProps> = ({
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>필터 히스토리</Text>
+              <Text style={styles.modalTitle}>{t('themeFilter.filterHistory')}</Text>
               <TouchableOpacity onPress={() => setShowHistoryModal(false)}>
-                <Text style={styles.closeButton}>닫기</Text>
+                <Text style={styles.closeButton}>{t('common.close')}</Text>
               </TouchableOpacity>
             </View>
 
             {savedFilters.length > 0 && (
               <>
-                <Text style={styles.sectionTitle}>저장된 필터</Text>
+                <Text style={styles.sectionTitle}>{t('themeFilter.savedFilters')}</Text>
                 <FlatList
                   data={savedFilters}
                   keyExtractor={(item) => item.id}
@@ -292,7 +332,7 @@ export const ThemeFilter: React.FC<ThemeFilterProps> = ({
                         onPress={() => deleteFilter(item.id, true)}
                         style={styles.deleteButton}
                       >
-                        <Text style={styles.deleteButtonText}>삭제</Text>
+                        <Text style={styles.deleteButtonText}>{t('common.delete')}</Text>
                       </TouchableOpacity>
                     </TouchableOpacity>
                   )}
@@ -302,7 +342,7 @@ export const ThemeFilter: React.FC<ThemeFilterProps> = ({
 
             {filterHistory.length > 0 && (
               <>
-                <Text style={styles.sectionTitle}>최근 검색</Text>
+                <Text style={styles.sectionTitle}>{t('themeFilter.recentSearches')}</Text>
                 <FlatList
                   data={filterHistory}
                   keyExtractor={(item) => item.id}
@@ -321,7 +361,7 @@ export const ThemeFilter: React.FC<ThemeFilterProps> = ({
                         onPress={() => deleteFilter(item.id, false)}
                         style={styles.deleteButton}
                       >
-                        <Text style={styles.deleteButtonText}>삭제</Text>
+                        <Text style={styles.deleteButtonText}>{t('common.delete')}</Text>
                       </TouchableOpacity>
                     </TouchableOpacity>
                   )}
@@ -331,7 +371,7 @@ export const ThemeFilter: React.FC<ThemeFilterProps> = ({
 
             {filterHistory.length === 0 && savedFilters.length === 0 && (
               <View style={styles.emptyHistoryContainer}>
-                <Text style={styles.emptyHistoryText}>저장된 필터가 없습니다.</Text>
+                <Text style={styles.emptyHistoryText}>{t('themeFilter.noSavedFilters')}</Text>
               </View>
             )}
           </View>
@@ -348,23 +388,23 @@ export const ThemeFilter: React.FC<ThemeFilterProps> = ({
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>필터 저장</Text>
+              <Text style={styles.modalTitle}>{t('themeFilter.saveFilter')}</Text>
               <TouchableOpacity onPress={() => setShowSaveModal(false)}>
-                <Text style={styles.closeButton}>취소</Text>
+                <Text style={styles.closeButton}>{t('common.cancel')}</Text>
               </TouchableOpacity>
             </View>
 
-            <Text style={styles.inputLabel}>필터 이름</Text>
+            <Text style={styles.inputLabel}>{t('themeFilter.filterName')}</Text>
             <TextInput
               style={styles.input}
               value={filterName}
               onChangeText={setFilterName}
-              placeholder="필터 이름 입력"
+              placeholder={t('themeFilter.enterFilterName')}
               placeholderTextColor="#999"
             />
 
             <Text style={styles.filterPreview}>
-              선택된 테마: {selectedThemes.map(id => getThemeById(id)?.name).join(useAndCondition ? ' AND ' : ' OR ')}
+              {t('themeFilter.selectedThemes')}: {selectedThemes.map(id => getThemeById(id)?.name).join(useAndCondition ? ' AND ' : ' OR ')}
             </Text>
 
             <TouchableOpacity 
@@ -372,7 +412,49 @@ export const ThemeFilter: React.FC<ThemeFilterProps> = ({
               onPress={saveCurrentFilter}
               disabled={!filterName.trim()}
             >
-              <Text style={styles.saveButtonText}>저장</Text>
+              <Text style={styles.saveButtonText}>{t('common.save')}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={toggleModal}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>{t('themeFilter.selectThemes')}</Text>
+              <TouchableOpacity onPress={toggleModal} style={styles.closeButtonContainer}>
+                <AntDesign name="close" size={20} color="#333" />
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.searchContainer}>
+              <AntDesign name="search1" size={16} color="#999" style={styles.searchIcon} />
+              <TextInput
+                style={styles.searchInput}
+                placeholder={t('themeFilter.searchPlaceholder')}
+                value={searchText}
+                onChangeText={setSearchText}
+              />
+            </View>
+
+            <FlatList
+              data={filteredThemes}
+              renderItem={renderThemeItem}
+              keyExtractor={(item) => item.id}
+              contentContainerStyle={styles.themeList}
+              ListEmptyComponent={
+                <Text style={styles.emptyText}>{t('themeFilter.noThemes')}</Text>
+              }
+            />
+
+            <TouchableOpacity style={styles.doneButton} onPress={toggleModal}>
+              <Text style={styles.doneButtonText}>{t('common.done')}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -400,16 +482,21 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
   },
-  headerButtons: {
+  button: {
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: '#f0f0f0',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 16,
   },
-  actionButton: {
-    marginLeft: 10,
-  },
-  actionButtonText: {
+  buttonText: {
     fontSize: 14,
-    color: '#007AFF',
+    color: '#666',
+    marginRight: 4,
+  },
+  icon: {
+    marginLeft: 2,
   },
   scrollView: {
     width: '100%',
@@ -460,9 +547,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   selectedThemeItem: {
-    fontSize: 14,
-    color: '#007AFF',
-    marginRight: 8,
+    backgroundColor: '#007AFF',
+    padding: 4,
+    borderRadius: 4,
+    margin: 2,
   },
   filterModeContainer: {
     marginTop: 8,
@@ -524,6 +612,9 @@ const styles = StyleSheet.create({
   closeButton: {
     fontSize: 16,
     color: '#007AFF',
+  },
+  closeButtonContainer: {
+    padding: 5,
   },
   sectionTitle: {
     fontSize: 16,
@@ -600,5 +691,69 @@ const styles = StyleSheet.create({
   },
   disabledButton: {
     backgroundColor: '#ccc',
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5',
+    marginHorizontal: 20,
+    marginBottom: 16,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+  },
+  searchIcon: {
+    marginRight: 8,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 16,
+    color: '#333',
+  },
+  themeList: {
+    paddingHorizontal: 20,
+  },
+  themeItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    marginVertical: 4,
+    backgroundColor: '#f9f9f9',
+    borderRadius: 8,
+  },
+  themeItemSelected: {
+    backgroundColor: '#007AFF',
+  },
+  themeItemText: {
+    fontSize: 16,
+    color: '#333',
+  },
+  selectedThemeItemText: {
+    color: '#fff',
+    fontWeight: '500',
+  },
+  checkIcon: {
+    marginLeft: 8,
+  },
+  emptyText: {
+    textAlign: 'center',
+    color: '#999',
+    fontSize: 16,
+    paddingVertical: 20,
+  },
+  doneButton: {
+    marginTop: 16,
+    marginHorizontal: 20,
+    backgroundColor: '#007AFF',
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  doneButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
   },
 }); 

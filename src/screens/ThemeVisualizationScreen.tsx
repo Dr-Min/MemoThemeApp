@@ -10,6 +10,7 @@ import {
   StatusBar,
   Platform
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { ThemeRelationshipGraph } from '../components/ThemeRelationshipGraph';
 import { ThemeStatisticsChart } from '../components/ThemeStatisticsChart';
 import { MemoService } from '../services/memo/MemoService';
@@ -21,6 +22,7 @@ import { Memo } from '../models/Memo';
 const STATUSBAR_HEIGHT = Platform.OS === 'android' ? StatusBar.currentHeight || 24 : 0;
 
 export const ThemeVisualizationScreen = ({ navigation }: any) => {
+  const { t } = useTranslation();
   const [themes, setThemes] = useState<Theme[]>([]);
   const [memos, setMemos] = useState<Memo[]>([]);
   const [selectedTheme, setSelectedTheme] = useState<string | null>(null);
@@ -83,9 +85,9 @@ export const ThemeVisualizationScreen = ({ navigation }: any) => {
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Text style={styles.backButton}>{'← 뒤로'}</Text>
+            <Text style={styles.backButton}>{t('common.back')}</Text>
           </TouchableOpacity>
-          <Text style={styles.title}>테마 시각화</Text>
+          <Text style={styles.title}>{t('themeVisualization.title')}</Text>
           <View style={{ width: 50 }} />
         </View>
         
@@ -95,7 +97,7 @@ export const ThemeVisualizationScreen = ({ navigation }: any) => {
             onPress={() => setActiveTab('relationship')}
           >
             <Text style={[styles.tabButtonText, activeTab === 'relationship' && styles.activeTabText]}>
-              관계도
+              {t('themeVisualization.relationshipTab')}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity 
@@ -103,7 +105,7 @@ export const ThemeVisualizationScreen = ({ navigation }: any) => {
             onPress={() => setActiveTab('statistics')}
           >
             <Text style={[styles.tabButtonText, activeTab === 'statistics' && styles.activeTabText]}>
-              통계
+              {t('themeVisualization.statisticsTab')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -111,7 +113,7 @@ export const ThemeVisualizationScreen = ({ navigation }: any) => {
         {loading ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="#007AFF" />
-            <Text style={styles.loadingText}>데이터 로드 중...</Text>
+            <Text style={styles.loadingText}>{t('common.loading', '데이터 로드 중...')}</Text>
           </View>
         ) : (
           <ScrollView style={styles.content}>
@@ -131,52 +133,52 @@ export const ThemeVisualizationScreen = ({ navigation }: any) => {
             {selectedThemeInfo && (
               <View style={styles.selectedThemeContainer}>
                 <View style={styles.selectedThemeHeader}>
-                  <Text style={styles.selectedThemeTitle}>선택된 테마: {selectedThemeInfo.name}</Text>
+                  <Text style={styles.selectedThemeTitle}>{t('themeVisualization.selectedTheme')}: {selectedThemeInfo.name}</Text>
                   <TouchableOpacity onPress={() => goToThemeEdit(selectedThemeInfo.id)}>
-                    <Text style={styles.editButton}>편집</Text>
+                    <Text style={styles.editButton}>{t('common.edit')}</Text>
                   </TouchableOpacity>
                 </View>
                 
                 <View style={styles.themeDetails}>
                   <View style={styles.detailItem}>
-                    <Text style={styles.detailLabel}>키워드:</Text>
+                    <Text style={styles.detailLabel}>{t('themeEdit.keywordPlaceholder')}:</Text>
                     <Text style={styles.detailValue}>
                       {selectedThemeInfo.keywords.length > 0 
                         ? selectedThemeInfo.keywords.join(', ') 
-                        : '없음'}
+                        : t('common.none', '없음')}
                     </Text>
                   </View>
                   
                   <View style={styles.detailItem}>
-                    <Text style={styles.detailLabel}>상위 테마:</Text>
+                    <Text style={styles.detailLabel}>{t('themeVisualization.parentThemes')}:</Text>
                     <Text style={styles.detailValue}>
                       {selectedThemeInfo.parentTheme 
-                        ? themes.find(t => t.id === selectedThemeInfo.parentTheme)?.name || '알 수 없음'
-                        : '없음'}
+                        ? themes.find(t => t.id === selectedThemeInfo.parentTheme)?.name || t('common.unknown', '알 수 없음')
+                        : t('common.none', '없음')}
                     </Text>
                   </View>
                   
                   <View style={styles.detailItem}>
-                    <Text style={styles.detailLabel}>하위 테마:</Text>
+                    <Text style={styles.detailLabel}>{t('themeVisualization.childThemes')}:</Text>
                     <Text style={styles.detailValue}>
                       {selectedThemeInfo.childThemes.length > 0 
                         ? selectedThemeInfo.childThemes
                             .map(id => themes.find(t => t.id === id)?.name)
                             .filter(Boolean)
                             .join(', ')
-                        : '없음'}
+                        : t('common.none', '없음')}
                     </Text>
                   </View>
                   
                   <View style={styles.detailItem}>
-                    <Text style={styles.detailLabel}>메모 개수:</Text>
-                    <Text style={styles.detailValue}>{selectedThemeMemos.length}개</Text>
+                    <Text style={styles.detailLabel}>{t('themeVisualization.memoCount')}:</Text>
+                    <Text style={styles.detailValue}>{selectedThemeMemos.length}{t('common.countUnit', '개')}</Text>
                   </View>
                 </View>
                 
                 {selectedThemeMemos.length > 0 && (
                   <View style={styles.memosList}>
-                    <Text style={styles.memosListTitle}>관련 메모 미리보기</Text>
+                    <Text style={styles.memosListTitle}>{t('themeVisualization.relatedMemos')}</Text>
                     {selectedThemeMemos.slice(0, 3).map(memo => (
                       <View key={memo.id} style={styles.memoPreview}>
                         <Text style={styles.memoContent} numberOfLines={2}>
@@ -189,7 +191,7 @@ export const ThemeVisualizationScreen = ({ navigation }: any) => {
                     ))}
                     {selectedThemeMemos.length > 3 && (
                       <Text style={styles.moreMemosText}>
-                        ...외 {selectedThemeMemos.length - 3}개 더 있음
+                        ...{t('common.andMore', '외')} {selectedThemeMemos.length - 3}{t('common.countMore', '개 더 있음')}
                       </Text>
                     )}
                   </View>

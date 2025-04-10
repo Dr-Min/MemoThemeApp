@@ -15,7 +15,19 @@
     "close": "Close",
     "confirm": "Confirm",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "back": "← Back",
+    "send": "Send",
+    "year": "year",
+    "month": "month",
+    "day": "day",
+    "error": "Error",
+    "loading": "Loading data...",
+    "none": "None",
+    "unknown": "Unknown",
+    "countUnit": "items"
   },
   "home": {
     "title": "Memos",
@@ -28,9 +40,9 @@
     "selectAll": "Select All",
     "addTheme": "Add Theme",
     "deleteSelected": "Delete Selected",
-    "noMemosMessage": "No memos",
-    "addNewMemoMessage": "Try adding a new memo!",
-    "noFilteredMemosMessage": "No memos match the selected filter criteria.",
+    "noMemosMessage": "No memos available.",
+    "addNewMemoMessage": "Add a new memo!",
+    "noFilteredMemosMessage": "No memos match the selected filters.",
     "resetThemeFilter": "Reset Theme Filter",
     "resetDateFilter": "Reset Date Filter"
   },
@@ -45,6 +57,28 @@
     "month": "Monthly",
     "year": "Yearly"
   },
+  "dateFilter": {
+    "filterByDate": "Filter by Date",
+    "all": "All",
+    "today": "Today",
+    "thisMonth": "This Month",
+    "thisYear": "This Year",
+    "customRange": "Custom Range",
+    "selectRange": "Select Range",
+    "startDate": "Start Date",
+    "endDate": "End Date"
+  },
+  "themeFilter": {
+    "title": "Theme Filter",
+    "selectThemes": "Select Themes",
+    "selectedThemes": "Selected Themes",
+    "filterMode": "Filter Mode",
+    "andMode": "AND Mode",
+    "orMode": "OR Mode",
+    "noThemes": "No themes available",
+    "applyFilter": "Apply Filter",
+    "resetFilter": "Reset Filter"
+  },
   "memoDetail": {
     "title": "Memo Detail",
     "edit": "Edit Memo",
@@ -56,12 +90,16 @@
   },
   "themeManagement": {
     "title": "Theme Management",
-    "addTheme": "Add Theme",
+    "addTheme": "Add New Theme",
     "editTheme": "Edit Theme",
     "deleteTheme": "Delete Theme",
-    "deleteConfirm": "Are you sure you want to delete this theme? It will be removed from all associated memos.",
-    "emptyThemes": "No themes yet. Try adding a new theme!",
-    "visualizeThemes": "Visualize Themes"
+    "deleteConfirm": "Are you sure you want to delete this theme? It will be removed from all connected memos.",
+    "emptyThemes": "No themes available. Add a new theme!",
+    "visualizeThemes": "Visualize Themes",
+    "backToMemo": "← Back to Memos",
+    "addSubTheme": "Add Subtheme to {{parent}}",
+    "noSubThemes": "No subthemes available. Add a new theme!",
+    "addThemeError": "Failed to add theme."
   },
   "themeEdit": {
     "title": "Edit Theme",
@@ -69,26 +107,44 @@
     "descriptionLabel": "Description",
     "colorLabel": "Color",
     "addKeywords": "Add Keywords",
-    "keywordPlaceholder": "Enter keyword",
-    "parentThemeLabel": "Parent Theme"
+    "keywordPlaceholder": "Keywords (comma separated)",
+    "parentThemeLabel": "Parent Theme",
+    "nameRequired": "Please enter a theme name."
   },
   "themeVisualization": {
     "title": "Theme Visualization",
     "relationshipTab": "Relationships",
     "statisticsTab": "Statistics",
-    "noThemeSelected": "Select a theme to see detailed information",
+    "noThemeSelected": "Select a theme to view details",
     "selectedTheme": "Selected Theme",
     "relatedMemos": "Related Memos",
     "parentThemes": "Parent Themes",
     "childThemes": "Child Themes",
     "memoCount": "Memo Count",
-    "isolatedThemes": "Isolated Themes"
+    "isolatedThemes": "Isolated Themes",
+    "relationshipGraph": "Theme Relationship Graph",
+    "isolatedThemesTitle": "Unconnected Themes",
+    "noThemes": "No themes available.",
+    "noMemos": "No memos available.",
+    "statisticsTitle": "Theme Statistics by Memo Count",
+    "detailedStatistics": "Detailed Statistics",
+    "barChart": "Bar Chart",
+    "pieChart": "Pie Chart"
   },
   "themeChatList": {
     "title": "Theme Chat",
-    "emptyMessage": "No themes yet. Themes are automatically created as you write memos.",
+    "emptyMessage": "No themes available. Themes will be created automatically when you write memos.",
     "lastMemo": "Last Memo",
-    "memoCount": "{count} Memos"
+    "memoCount": "{count} memos",
+    "writeNewMemo": "Write a new memo",
+    "goToThemeManagement": "Go to Theme Management"
+  },
+  "themeChat": {
+    "title": "Theme Chat",
+    "noMemos": "No memos in this theme.",
+    "addNewMemo": "Add a new memo!",
+    "enterMessage": "Enter message...",
+    "iconUpdate": "Failed to update theme icon"
   },
   "settings": {
     "title": "Settings",

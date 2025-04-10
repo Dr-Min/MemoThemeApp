@@ -15,16 +15,23 @@ import {
 import { MemoService } from '../services/memo/MemoService';
 import { ThemeService } from '../services/theme/ThemeService';
 import { Memo, createMemo } from '../models/Memo';
+import { Theme } from '../models/Theme';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { IconPickerModal } from '../components/IconPickerModal';
+import { useTranslation } from 'react-i18next';
 
 // 상태바 높이 계산
 const STATUSBAR_HEIGHT = Platform.OS === 'android' ? StatusBar.currentHeight || 24 : 0;
 
 export const ThemeChatScreen = ({ route, navigation }: any) => {
-  const { themeId, themeName } = route.params;
+  const { t } = useTranslation();
+  const { themeId } = route.params;
+  const [theme, setTheme] = useState<Theme | null>(null);
   const [memos, setMemos] = useState<Memo[]>([]);
   const [loading, setLoading] = useState(true);
   const [newMessage, setNewMessage] = useState('');
   const [sending, setSending] = useState(false);
+  const [iconModalVisible, setIconModalVisible] = useState(false);
   
   const flatListRef = useRef<FlatList>(null);
 
@@ -32,6 +39,11 @@ export const ThemeChatScreen = ({ route, navigation }: any) => {
   const loadData = async () => {
     setLoading(true);
     try {
+      // 테마 정보 가져오기
+      const allThemes = await ThemeService.getAllThemes();
+      const currentTheme = allThemes.find(t => t.id === themeId);
+      setTheme(currentTheme || null);
+      
       // 모든 메모 가져오기
       const allMemos = await MemoService.getAllMemos();
       
@@ -45,7 +57,7 @@ export const ThemeChatScreen = ({ route, navigation }: any) => {
       
       setMemos(sortedMemos);
     } catch (error) {
-      console.error('테마 메모 로드 실패:', error);
+      console.error('테마 정보 또는 메모 로드 실패:', error);
     } finally {
       setLoading(false);
     }
@@ -78,19 +90,14 @@ export const ThemeChatScreen = ({ route, navigation }: any) => {
     
     setSending(true);
     try {
-      // 현재 테마에만 메모 추가 (테마 분석 완전히 제거)
       const themeIds = [themeId];
-      
-      // 새 메모를 추가하되, 추가 분석 없이 현재 테마만 사용
       const newMemo = createMemo(newMessage, themeIds);
       const memos = await MemoService.getAllMemos();
       await MemoService.saveMemos([...memos, newMemo]);
       
-      // 입력 초기화 및 데이터 새로고침
       setNewMessage('');
       await loadData();
       
-      // 스크롤을 가장 아래로
       setTimeout(() => {
         flatListRef.current?.scrollToEnd({ animated: true });
       }, 100);
@@ -143,7 +150,7 @@ export const ThemeChatScreen = ({ route, navigation }: any) => {
       dateObj.getMonth() === today.getMonth() &&
       dateObj.getDate() === today.getDate()
     ) {
-      return '오늘';
+      return t('common.today');
     }
     
     if (
@@ -151,10 +158,10 @@ export const ThemeChatScreen = ({ route, navigation }: any) => {
       dateObj.getMonth() === yesterday.getMonth() &&
       dateObj.getDate() === yesterday.getDate()
     ) {
-      return '어제';
+      return t('common.yesterday');
     }
     
-    return `${dateObj.getFullYear()}년 ${dateObj.getMonth() + 1}월 ${dateObj.getDate()}일`;
+    return `${dateObj.getFullYear()}${t('common.year')} ${dateObj.getMonth() + 1}${t('common.month')} ${dateObj.getDate()}${t('common.day')}`;
   };
 
   // 메모 렌더링
@@ -168,30 +175,74 @@ export const ThemeChatScreen = ({ route, navigation }: any) => {
         </View>
       )}
       <TouchableOpacity 
-        style={styles.messageContainer}
+        style={styles.messageWrapper}
         onPress={() => goToMemoDetail(item.id)}
       >
-        <View style={styles.messageContent}>
+        <View style={styles.messageBubble}>
           <Text style={styles.messageText}>{item.content}</Text>
           <Text style={styles.timeText}>{formatDate(new Date(item.createdAt))}</Text>
         </View>
       </TouchableOpacity>
     </View>
   );
+  
+  // 아이콘 변경 처리 함수
+  const handleIconSelect = async (iconName: string) => {
+    if (!theme) return;
+    
+    try {
+      const updatedTheme = { ...theme, icon: iconName };
+      await ThemeService.updateTheme(updatedTheme);
+      setTheme(updatedTheme); // 상태 업데이트
+    } catch (error) {
+      console.error('테마 아이콘 업데이트 실패:', error);
+    }
+  };
+
+  // 로딩 중이거나 테마 정보가 없을 경우 기본 헤더 표시
+  if (loading || !theme) {
+    return (
+      <View style={styles.safeContainer}>
+        <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+        <SafeAreaView style={styles.container}>
+          <View style={styles.header}>
+            <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+              <Text style={styles.backButtonText}>{t('common.back')}</Text>
+            </TouchableOpacity>
+            <View style={styles.headerTitleContainer} />
+            <View style={styles.headerRight} />
+          </View>
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#007AFF" />
+          </View>
+        </SafeAreaView>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.safeContainer}>
-      <StatusBar barStyle="dark-content" backgroundColor="#f5f5f5" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
           <TouchableOpacity 
             style={styles.backButton}
             onPress={() => navigation.goBack()}
           >
-            <Text style={styles.backButtonText}>{'< 뒤로'}</Text>
+            <Text style={styles.backButtonText}>{t('common.back')}</Text>
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>{themeName}</Text>
-          <View style={styles.headerRight} />
+          
+          {/* 헤더 중앙 컨텐츠 (아이콘 + 테마 이름) */}
+          <TouchableOpacity 
+            style={styles.headerTitleContainer} 
+            onPress={() => setIconModalVisible(true)}
+          >
+            <Icon name={theme.icon || 'label'} size={24} color="#1C1C1E" style={styles.headerIcon} />
+            <Text style={styles.headerTitle}>{theme.name}</Text>
+          </TouchableOpacity>
+          
+          {/* 오른쪽 공간 확보 */}
+          <View style={styles.headerRight} /> 
         </View>
         
         {loading ? (
@@ -208,10 +259,10 @@ export const ThemeChatScreen = ({ route, navigation }: any) => {
             ListEmptyComponent={
               <View style={styles.emptyContainer}>
                 <Text style={styles.emptyText}>
-                  이 테마에 메모가 없습니다.
+                  {t('themeChat.noMemos')}
                 </Text>
                 <Text style={styles.emptySubText}>
-                  새 메모를 추가해보세요!
+                  {t('themeChat.addNewMemo')}
                 </Text>
               </View>
             }
@@ -227,7 +278,7 @@ export const ThemeChatScreen = ({ route, navigation }: any) => {
             style={[styles.input, { maxHeight: 100 }]}
             value={newMessage}
             onChangeText={setNewMessage}
-            placeholder="메시지 입력..."
+            placeholder={t('themeChat.enterMessage')}
             multiline
           />
           <TouchableOpacity 
@@ -241,10 +292,18 @@ export const ThemeChatScreen = ({ route, navigation }: any) => {
             {sending ? (
               <ActivityIndicator size="small" color="#fff" />
             ) : (
-              <Text style={styles.sendButtonText}>전송</Text>
+              <Text style={styles.sendButtonText}>{t('common.send')}</Text>
             )}
           </TouchableOpacity>
         </KeyboardAvoidingView>
+        
+        {/* 아이콘 선택 모달 */}
+        <IconPickerModal 
+          visible={iconModalVisible}
+          onClose={() => setIconModalVisible(false)}
+          onSelectIcon={handleIconSelect}
+          currentIcon={theme.icon || 'label'}
+        />
       </SafeAreaView>
     </View>
   );
@@ -253,37 +312,54 @@ export const ThemeChatScreen = ({ route, navigation }: any) => {
 const styles = StyleSheet.create({
   safeContainer: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#E9F0FD',
     paddingTop: STATUSBAR_HEIGHT
   },
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5'
+    backgroundColor: '#E9F0FD'
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
-    backgroundColor: '#fff'
+    borderBottomColor: '#EAEAEA',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
   backButton: {
-    padding: 4
+    padding: 8,
   },
   backButtonText: {
     fontSize: 16,
-    color: '#007AFF'
+    color: '#007AFF',
+    fontWeight: '500',
+  },
+  headerTitleContainer: {
+    flex: 1, 
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 5,
+  },
+  headerIcon: {
+    marginRight: 8,
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333'
+    fontWeight: '600',
+    color: '#1C1C1E',
+    textAlign: 'center',
   },
   headerRight: {
-    width: 40
+    width: 40,
   },
   loadingContainer: {
     flex: 1,
@@ -291,92 +367,101 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   messagesList: {
-    flexGrow: 1,
-    paddingVertical: 16
+    paddingVertical: 16,
+    paddingHorizontal: 10,
   },
-  dateHeaderContainer: {
-    alignItems: 'center',
-    marginVertical: 8
+  messageWrapper: {
+    alignItems: 'flex-end',
+    marginBottom: 12,
   },
-  dateHeaderText: {
-    fontSize: 14,
-    color: '#666',
-    backgroundColor: 'rgba(230, 230, 230, 0.8)',
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 12
-  },
-  messageContainer: {
-    marginVertical: 4,
-    marginHorizontal: 16,
-    alignSelf: 'flex-end',
-    maxWidth: '80%'
-  },
-  messageContent: {
-    backgroundColor: '#007AFF',
-    borderRadius: 16,
-    borderBottomRightRadius: 4,
-    padding: 12,
-    minWidth: 80
+  messageBubble: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 18,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    maxWidth: '80%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 1,
   },
   messageText: {
     fontSize: 16,
-    color: '#fff',
-    marginBottom: 4
+    color: '#1C1C1E',
+    lineHeight: 22,
   },
   timeText: {
-    fontSize: 12,
-    color: 'rgba(255, 255, 255, 0.8)',
-    alignSelf: 'flex-end'
+    fontSize: 11,
+    color: '#8E8E93',
+    marginTop: 5,
+    textAlign: 'right',
   },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
+  dateHeaderContainer: {
     alignItems: 'center',
-    paddingTop: 100
+    marginVertical: 15,
   },
-  emptyText: {
-    fontSize: 18,
-    color: '#666',
-    marginBottom: 8
-  },
-  emptySubText: {
-    fontSize: 14,
-    color: '#999'
+  dateHeaderText: {
+    fontSize: 12,
+    color: '#6E7191',
+    backgroundColor: '#FFFFFFCC',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+    overflow: 'hidden',
+    fontWeight: '500',
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 8,
-    backgroundColor: '#fff',
+    backgroundColor: '#FFFFFF',
     borderTopWidth: 1,
-    borderTopColor: '#e0e0e0'
+    borderTopColor: '#EAEAEA',
   },
   input: {
     flex: 1,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 18,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    backgroundColor: '#f9f9f9',
-    fontSize: 16
+    backgroundColor: '#F0F0F5',
+    borderRadius: 20,
+    paddingVertical: Platform.OS === 'ios' ? 10 : 8,
+    paddingHorizontal: 15,
+    fontSize: 16,
+    marginRight: 8,
+    lineHeight: 20,
   },
   sendButton: {
     backgroundColor: '#007AFF',
-    borderRadius: 24,
-    width: 48,
-    height: 48,
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 8
+    minHeight: 40,
   },
   sendButtonDisabled: {
-    backgroundColor: '#b0c4de'
+    backgroundColor: '#B0C4DE',
   },
   sendButtonText: {
     color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  emptyContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 100,
+    paddingHorizontal: 20,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: '#6E7191',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  emptySubText: {
     fontSize: 14,
-    fontWeight: 'bold'
-  }
+    color: '#8E8E93',
+    textAlign: 'center',
+  },
 }); 

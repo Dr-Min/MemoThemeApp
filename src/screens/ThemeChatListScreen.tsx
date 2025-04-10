@@ -8,8 +8,10 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { Ionicons } from '@expo/vector-icons';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
+import { useTranslation } from 'react-i18next';
 
 // 상태바 높이 계산
 const STATUSBAR_HEIGHT = Platform.OS === 'android' ? StatusBar.currentHeight || 24 : 0;
@@ -24,6 +26,7 @@ interface ThemeChatInfo {
 type ThemeChatListScreenNavigationProp = StackNavigationProp<RootStackParamList, 'ThemeChatList'>;
 
 export const ThemeChatListScreen = () => {
+  const { t } = useTranslation();
   const navigation = useNavigation<ThemeChatListScreenNavigationProp>();
   const [themeChats, setThemeChats] = useState<ThemeChatInfo[]>([]);
   const [loading, setLoading] = useState(true);
@@ -133,10 +136,12 @@ export const ThemeChatListScreen = () => {
       onPress={() => goToThemeChat(item.theme.id, item.theme.name)}
     >
       <View style={styles.chatItemLeft}>
-        <View style={styles.themeCircle}>
-          <Text style={styles.themeInitial}>
-            {item.theme.name.charAt(0).toUpperCase()}
-          </Text>
+        <View style={styles.iconContainer}>
+          <MaterialIcon 
+            name={item.theme.icon || 'label'} 
+            size={26} 
+            color="#5e6472"
+          />
         </View>
       </View>
       
@@ -148,7 +153,7 @@ export const ThemeChatListScreen = () => {
           </Text>
         ) : (
           <Text style={styles.emptyPreviewText}>
-            새 메모를 작성해보세요
+            {t('themeChatList.writeNewMemo')}
           </Text>
         )}
       </View>
@@ -156,7 +161,7 @@ export const ThemeChatListScreen = () => {
       <View style={styles.chatItemRight}>
         {item.latestMemo && (
           <Text style={styles.timeText}>
-            {formatDate(item.latestMemo.createdAt)}
+            {formatDate(item.latestMemo.createdAt.toString())}
           </Text>
         )}
         {item.memoCount > 0 && (
@@ -176,7 +181,7 @@ export const ThemeChatListScreen = () => {
           <TouchableOpacity style={styles.backButton} onPress={goToHome}>
             <Ionicons name="arrow-back" size={24} color="#333" />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>테마 채팅</Text>
+          <Text style={styles.headerTitle}>{t('themeChatList.title')}</Text>
           <TouchableOpacity style={styles.manageButton} onPress={goToThemeManagement}>
             <Ionicons name="settings-outline" size={24} color="#333" />
           </TouchableOpacity>
@@ -195,13 +200,13 @@ export const ThemeChatListScreen = () => {
             ListEmptyComponent={
               <View style={styles.emptyContainer}>
                 <Text style={styles.emptyText}>
-                  테마가 없습니다. 테마 관리에서 테마를 추가해보세요.
+                  {t('themeChatList.emptyMessage')}
                 </Text>
                 <TouchableOpacity 
                   style={styles.emptyButton}
                   onPress={goToThemeManagement}
                 >
-                  <Text style={styles.emptyButtonText}>테마 관리로 이동</Text>
+                  <Text style={styles.emptyButtonText}>{t('themeManagement.title')}</Text>
                 </TouchableOpacity>
               </View>
             }
@@ -252,70 +257,77 @@ const styles = StyleSheet.create({
   },
   chatItem: {
     flexDirection: 'row',
-    padding: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    backgroundColor: '#fff',
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
-    backgroundColor: '#fff'
+    borderBottomColor: '#f0f0f0',
+    alignItems: 'center',
   },
   chatItemLeft: {
     marginRight: 12,
-    justifyContent: 'center'
+  },
+  iconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#e9f0fd',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   themeCircle: {
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: '#007AFF',
+    backgroundColor: '#e0e0e0',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   themeInitial: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
-    color: '#fff'
+    color: '#555'
   },
   chatItemCenter: {
     flex: 1,
-    justifyContent: 'center'
+    marginRight: 10,
   },
   themeName: {
-    fontSize: 17,
-    fontWeight: 'bold',
+    fontSize: 16,
+    fontWeight: '600',
     color: '#333',
-    marginBottom: 4
+    marginBottom: 3,
   },
   previewText: {
     fontSize: 14,
-    color: '#666'
+    color: '#666',
   },
   emptyPreviewText: {
     fontSize: 14,
     color: '#999',
-    fontStyle: 'italic'
+    fontStyle: 'italic',
   },
   chatItemRight: {
     alignItems: 'flex-end',
-    justifyContent: 'center',
-    minWidth: 60
   },
   timeText: {
     fontSize: 12,
     color: '#999',
-    marginBottom: 4
+    marginBottom: 5,
   },
   badgeContainer: {
-    backgroundColor: '#007AFF',
-    borderRadius: 12,
-    minWidth: 24,
-    height: 24,
-    justifyContent: 'center',
+    backgroundColor: '#FF6B6B',
+    borderRadius: 10,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    minWidth: 20,
     alignItems: 'center',
-    paddingHorizontal: 6
+    justifyContent: 'center',
   },
   badgeText: {
-    fontSize: 12,
+    color: '#fff',
+    fontSize: 11,
     fontWeight: 'bold',
-    color: '#fff'
   },
   emptyContainer: {
     padding: 40,

@@ -45,6 +45,28 @@
     "month": "月別",
     "year": "年別"
   },
+  "dateFilter": {
+    "filterByDate": "日付でフィルター",
+    "all": "すべて",
+    "today": "今日",
+    "thisMonth": "今月",
+    "thisYear": "今年",
+    "customRange": "カスタム範囲",
+    "selectRange": "範囲を選択",
+    "startDate": "開始日",
+    "endDate": "終了日"
+  },
+  "themeFilter": {
+    "title": "テーマフィルター",
+    "selectThemes": "テーマを選択",
+    "selectedThemes": "選択したテーマ",
+    "filterMode": "フィルターモード",
+    "andMode": "ANDモード",
+    "orMode": "ORモード",
+    "noThemes": "利用可能なテーマがありません",
+    "applyFilter": "フィルターを適用",
+    "resetFilter": "フィルターをリセット"
+  },
   "memoDetail": {
     "title": "メモ詳細",
     "edit": "メモを編集",

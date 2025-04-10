@@ -3,12 +3,14 @@ import { StyleSheet, View, Text, Dimensions, ScrollView, TouchableOpacity } from
 import { BarChart, PieChart } from 'react-native-chart-kit';
 import { Theme } from '../models/Theme';
 import { Memo } from '../models/Memo';
+import { useTranslation } from 'react-i18next';
 
 interface ThemeStatistics {
   themeId: string;
   themeName: string;
   count: number;
-  color: string;
+  icon: string;
+  color: string; // 차트 색상용 (icon과는 별개)
 }
 
 interface ThemeStatisticsChartProps {
@@ -22,6 +24,7 @@ export const ThemeStatisticsChart: React.FC<ThemeStatisticsChartProps> = ({
   memos,
   onThemeSelect
 }) => {
+  const { t } = useTranslation();
   const [statistics, setStatistics] = useState<ThemeStatistics[]>([]);
   const [chartType, setChartType] = useState<'bar' | 'pie'>('bar');
   const [selectedTheme, setSelectedTheme] = useState<string | null>(null);
@@ -47,7 +50,8 @@ export const ThemeStatisticsChart: React.FC<ThemeStatisticsChartProps> = ({
         themeId: theme.id,
         themeName: theme.name,
         count,
-        color: colors[index % colors.length] // 색상 순환
+        icon: theme.icon || 'label', // 테마의 icon 속성 사용
+        color: colors[index % colors.length] // 차트 색상용
       };
     });
     
@@ -105,7 +109,7 @@ export const ThemeStatisticsChart: React.FC<ThemeStatisticsChartProps> = ({
     return (
       <View style={styles.emptyContainer}>
         <Text style={styles.emptyText}>
-          {themes.length === 0 ? '테마가 없습니다.' : '메모가 없습니다.'}
+          {themes.length === 0 ? t('themeVisualization.noThemes') : t('themeVisualization.noMemos')}
         </Text>
       </View>
     );
@@ -114,7 +118,7 @@ export const ThemeStatisticsChart: React.FC<ThemeStatisticsChartProps> = ({
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>테마별 메모 통계</Text>
+        <Text style={styles.title}>{t('themeVisualization.statisticsTitle')}</Text>
         <View style={styles.chartTypeSwitcher}>
           <TouchableOpacity
             style={[
@@ -127,7 +131,7 @@ export const ThemeStatisticsChart: React.FC<ThemeStatisticsChartProps> = ({
               styles.chartTypeText,
               chartType === 'bar' && styles.chartTypeTextActive
             ]}>
-              막대 차트
+              {t('themeVisualization.barChart')}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -141,7 +145,7 @@ export const ThemeStatisticsChart: React.FC<ThemeStatisticsChartProps> = ({
               styles.chartTypeText,
               chartType === 'pie' && styles.chartTypeTextActive
             ]}>
-              파이 차트
+              {t('themeVisualization.pieChart')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -180,7 +184,7 @@ export const ThemeStatisticsChart: React.FC<ThemeStatisticsChartProps> = ({
       </ScrollView>
       
       <ScrollView style={styles.statsListContainer}>
-        <Text style={styles.statsListTitle}>상세 통계</Text>
+        <Text style={styles.statsListTitle}>{t('themeVisualization.detailedStatistics')}</Text>
         {statistics.map(stat => (
           <TouchableOpacity
             key={stat.themeId}
@@ -192,7 +196,7 @@ export const ThemeStatisticsChart: React.FC<ThemeStatisticsChartProps> = ({
           >
             <View style={[styles.statColorIndicator, { backgroundColor: stat.color }]} />
             <Text style={styles.statName}>{stat.themeName}</Text>
-            <Text style={styles.statCount}>{stat.count}개</Text>
+            <Text style={styles.statCount}>{stat.count}{t('common.countUnit')}</Text>
           </TouchableOpacity>
         ))}
       </ScrollView>

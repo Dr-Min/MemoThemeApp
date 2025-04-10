@@ -45,6 +45,28 @@
     "month": "按月",
     "year": "按年"
   },
+  "dateFilter": {
+    "filterByDate": "按日期筛选",
+    "all": "全部",
+    "today": "今天",
+    "thisMonth": "本月",
+    "thisYear": "今年",
+    "customRange": "自定义范围",
+    "selectRange": "选择范围",
+    "startDate": "开始日期",
+    "endDate": "结束日期"
+  },
+  "themeFilter": {
+    "title": "主题筛选",
+    "selectThemes": "选择主题",
+    "selectedThemes": "已选主题",
+    "filterMode": "筛选模式",
+    "andMode": "与模式",
+    "orMode": "或模式",
+    "noThemes": "没有可用主题",
+    "applyFilter": "应用筛选",
+    "resetFilter": "重置筛选"
+  },
   "memoDetail": {
     "title": "备忘录详情",
     "edit": "编辑备忘录",
